@@ -1,4 +1,4 @@
-# Usar a imagem node:16.14-alpine como base
+# Usar a imagem node:16.14-alpine como baseee
 
 # Mudar para o diretório de trabalho /app-backend
 
