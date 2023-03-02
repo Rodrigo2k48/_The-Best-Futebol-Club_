@@ -32,7 +32,7 @@ describe("Testes na Rota Teams da aplicação", async () => {
         },
       ]
     
-      Sinon.stub(Model, 'getAllTeams').resolves(teamsMock)
+      Sinon.stub(Model, 'findAll').resolves(teamsMock)
     // Action     
     const response = await chai.request(app).get('/teams')
     // Assertion
