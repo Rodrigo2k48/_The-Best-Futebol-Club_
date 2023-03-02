@@ -3,6 +3,7 @@ import chaiHttp from "chai-http";
 import { app } from "../app"; 
 import Sinon from "sinon"; 
 import { Model } from 'sequelize'
+import Team from "../database/models/Team";
 const {expect} = chai
 chai.use(chaiHttp);
 
@@ -13,24 +14,24 @@ describe("Testes na Rota Teams da aplicação", async () => {
 
     it("/teams - GET - deve retornar status 200 e a lista dos times", async () => {
     // Arrange
-    const teamsMock = 
+    const teamsMock: Team[] = 
       [
         {
-          team_name: 'Real Madri',
+          teamName: 'Real Madri',
         },
         {
-          team_name: 'Barcelona',
+          teamName: 'Barcelona',
         },
         {
-          team_name: 'Flamengo',
+          teamName: 'Flamengo',
         },
         {
-          team_name: 'Fortaleza',
+          teamName: 'Fortaleza',
         },
         {
-          team_name: 'Vasco',
+          teamName: 'Vasco',
         },
-      ]
+      ] as unknown as Team[]
     
       Sinon.stub(Model, 'findAll').resolves(teamsMock)
     // Action     
