@@ -6,7 +6,6 @@ class App {
 
   constructor() {
     this.app = express();
-
     this.config();
     this.initRoutes();
 
@@ -27,7 +26,7 @@ class App {
   }
 
   private initRoutes(): void {
-    this.app.use('/teams', teamsRouter);
+    this.app.use(teamsRouter);
   }
 
   public start(PORT: string | number):void {
