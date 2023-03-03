@@ -11,7 +11,6 @@ describe("Testes na Rota Teams da aplicação", async () => {
    afterEach(() => {
     Sinon.restore();
   })
-
     it("/teams - GET - deve retornar status 200 e a lista dos times", async () => {
     // Arrange
     const teamsMock: Team[] = 
@@ -39,5 +38,9 @@ describe("Testes na Rota Teams da aplicação", async () => {
     // Assertion
     expect(response.status).to.equal(200)
     expect(response.body).to.deep.equal(teamsMock)
+    })
+    it("/teams/:id - GET deve retornar status 200 e o time no banco de dados referente ao id", async () => {
+      const response = await chai.request(app).get('/teams/:id')
+      expect(response.status).to.equal(200)
     })
 })
