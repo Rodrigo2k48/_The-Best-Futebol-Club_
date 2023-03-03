@@ -26,7 +26,7 @@ class App {
   }
 
   private initRoutes(): void {
-    this.app.use(teamsRouter);
+    this.app.use('/teams', teamsRouter);
   }
 
   public start(PORT: string | number):void {
