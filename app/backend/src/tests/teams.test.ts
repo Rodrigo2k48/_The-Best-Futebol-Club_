@@ -50,7 +50,7 @@ describe("Testes na Rota Teams da aplicação", async () => {
           teamName: "Palmeiras"
         }
       ] as unknown as Team[]
-      Sinon.stub(Model, 'findByPk').resolves(teamsOutput[1])
+      Sinon.stub(Model, 'findAll').resolves(teamsOutput)
       const response = await chai.request(app).get('/teams/36')
       expect(response.status).to.equal(200)
       expect(response.body).to.property("id")
