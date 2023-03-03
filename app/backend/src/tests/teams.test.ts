@@ -39,8 +39,21 @@ describe("Testes na Rota Teams da aplicação", async () => {
     expect(response.status).to.equal(200)
     expect(response.body).to.deep.equal(teamsMock)
     })
-    it("/teams/:id - GET deve retornar status 200 e o time no banco de dados referente ao id", async () => {
-      const response = await chai.request(app).get('/teams/:id')
+    it("/teams/:id - GET - deve retornar status 200 e o time no banco de dados referente ao id", async () => {
+      const teamsOutput = [
+        {
+          id: 99,
+          teamName: "Rodoviaria"
+        },
+        {
+          id: 36,
+          teamName: "Palmeiras"
+        }
+      ] as unknown as Team[]
+      Sinon.stub(Model, 'findByPk').resolves(teamsOutput[1])
+      const response = await chai.request(app).get('/teams/36')
       expect(response.status).to.equal(200)
+      expect(response.body).to.property("id")
+      expect(response.body.teamName).to.equal("Palmeiras")
     })
 })
