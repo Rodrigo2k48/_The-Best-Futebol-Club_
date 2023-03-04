@@ -28,4 +28,19 @@ it("/login - POST - deve retornar status 200 e um token caso o usuario esteja no
     expect(response.status).to.be.equal(200)
     expect(response.body).to.property("token")
 }) 
+it('/login - POST - deve retornar status 400 e uma mensagem de erro caso o campo "email" não for passado no corpo da requisição', async () => {
+    const loginMock = [{
+        username: 'Admin',
+        role: 'admin',
+        email: 'admin@admin.com',
+        password: '$2a$08$xi.Hxk1czAO0nZR..B393u10aED0RQ1N3PAEXQ7HxtLjKPEZBu.PW'
+          // senha: secret_admin
+      },] as unknown as User[]
+  sinon.stub(Model, 'findAll').resolves(loginMock)
+  const response = await chai.request(app).post("/login").send({
+    password: "secret_user",
+  })
+    expect(response.status).to.be.not.equal(200)
+    expect(response.badRequest).to.be.true
+})
 })
