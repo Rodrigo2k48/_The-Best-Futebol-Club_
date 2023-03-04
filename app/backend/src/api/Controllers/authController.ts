@@ -1,0 +1,20 @@
+import { Request, Response, NextFunction } from 'express';
+import IAuthService from '../interfaces/IAuthService';
+
+export default class AuthController {
+  protected service: IAuthService;
+  constructor(service: IAuthService) {
+    this.service = service;
+  }
+
+  public async login(req: Request, res: Response, next: NextFunction):
+  Promise<Response | void> {
+    try {
+      const { email, password } = req.body;
+      const token = await this.service.generateToken({ email, password });
+      return res.status(200).json({ token });
+    } catch (error) {
+      next(error);
+    }
+  }
+}
