@@ -4,7 +4,7 @@ import Matche from './Matche';
 
 class Team extends Model {
   declare id: number;
-  declare name: string;
+  declare teamName: string;
 }
 
 Team.init({
