@@ -1,6 +1,7 @@
 import express from 'express';
 import authRoute from './api/routers/authRoute';
 import teamsRoute from './api/routers/teamsRoute';
+import HttpErrorMiddleware from './api/middlewares/HttpErrorMiddleware';
 
 class App {
   public app: express.Express;
@@ -9,6 +10,7 @@ class App {
     this.app = express();
     this.config();
     this.initRoutes();
+    this.errorHandler();
 
     // Não remover essa rota
     this.app.get('/', (req, res) => res.json({ ok: true }));
@@ -29,6 +31,10 @@ class App {
   private initRoutes(): void {
     this.app.use('/teams', teamsRoute);
     this.app.use('/login', authRoute);
+  }
+
+  private errorHandler(): void {
+    this.app.use(HttpErrorMiddleware);
   }
 
   public start(PORT: string | number):void {
