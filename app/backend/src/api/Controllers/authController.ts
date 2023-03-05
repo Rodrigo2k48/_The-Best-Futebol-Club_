@@ -12,7 +12,7 @@ export default class AuthController {
   Promise<Response | void> {
     try {
       const { email, password } = req.body;
-      if (!email) {
+      if (!email || !password) {
         throw new HttpException(400, 'All fields must be filled');
       }
       const token = await this.service.generateToken({ email, password });
