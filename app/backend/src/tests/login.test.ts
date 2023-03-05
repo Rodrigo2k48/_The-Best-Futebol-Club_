@@ -58,4 +58,34 @@ it('/login - POST - deve retornar status 400 e uma mensagem de erro caso o campo
     expect(response.status).to.be.not.equal(200)
     expect(response.badRequest).to.be.true
 })
+
+it('/login - POST - deve retornar status 401 e uma mensagem de erro caso o usuario não esteja cadastrado no banco de dados', async () => {
+  const loginMock = [
+    {
+      username: 'Admin',
+      role: 'admin',
+      email: 'admin@admin.com',
+      password: '$2a$08$xi.Hxk1czAO0nZR..B393u10aED0RQ1N3PAEXQ7HxtLjKPEZBu.PW'
+        // password: secret_admin
+    },
+    {
+      username: 'User',
+      role: 'user',
+      email: 'user@user.com',
+      password: '$2a$08$xi.Hxk1czAO0nZR..B393u10aED0RQ1N3PAEXQ7HxtLjKPEZBu.PW'
+        // password: secret_user
+    },
+  ] as unknown as User[];
+
+  sinon.stub(Model, 'findAll').resolves(loginMock);
+
+  const response = await chai.request(app)
+    .post('/login')
+    .send({
+    email: "jefersonCaminhões@gmail.com",
+    password: "cactosfelizes",
+    });
+
+  expect(response.status).to.equal(401);
+});
 })
