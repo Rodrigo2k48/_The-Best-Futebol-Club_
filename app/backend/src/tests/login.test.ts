@@ -38,7 +38,22 @@ it('/login - POST - deve retornar status 400 e uma mensagem de erro caso o campo
       },] as unknown as User[]
   sinon.stub(Model, 'findAll').resolves(loginMock)
   const response = await chai.request(app).post("/login").send({
-    password: "secret_user",
+    password: "secret_admin",
+  })
+    expect(response.status).to.be.not.equal(200)
+    expect(response.badRequest).to.be.true
+})
+it('/login - POST - deve retornar status 400 e uma mensagem de erro caso o campo "password" não for passado no corpo da requisição', async () => {
+    const loginMock = [{
+        username: 'Admin',
+        role: 'admin',
+        email: 'admin@admin.com',
+        password: '$2a$08$xi.Hxk1czAO0nZR..B393u10aED0RQ1N3PAEXQ7HxtLjKPEZBu.PW'
+          // senha: secret_admin
+      },] as unknown as User[]
+  sinon.stub(Model, 'findAll').resolves(loginMock)
+  const response = await chai.request(app).post("/login").send({
+    email: "user@user.com",
   })
     expect(response.status).to.be.not.equal(200)
     expect(response.badRequest).to.be.true
