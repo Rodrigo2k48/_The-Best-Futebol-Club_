@@ -58,7 +58,6 @@ it('/login - POST - deve retornar status 400 e uma mensagem de erro caso o campo
     expect(response.status).to.be.not.equal(200)
     expect(response.badRequest).to.be.true
 })
-
 it('/login - POST - deve retornar status 401 e uma mensagem de erro caso o usuario não esteja cadastrado no banco de dados', async () => {
   const loginMock = [
     {
@@ -88,4 +87,8 @@ it('/login - POST - deve retornar status 401 e uma mensagem de erro caso o usuar
 
   expect(response.status).to.equal(401);
 });
+it("/login/role - GET - deve retonar status 200 e a role do usuario logado na aplicação", async () => {
+  const response = await chai.request(app).post("/login/role")
+  expect(response.status).to.be.equal(200)
+})
 })
