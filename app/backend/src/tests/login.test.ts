@@ -88,7 +88,7 @@ it('/login - POST - deve retornar status 401 e uma mensagem de erro caso o usuar
   expect(response.status).to.equal(401);
 });
 it("/login/role - GET - deve retonar status 200 e a role do usuario logado na aplicação", async () => {
-  const response = await chai.request(app).post("/login/role")
+  const response = await chai.request(app).get("/login/role")
   expect(response.status).to.be.equal(200)
 })
 })
