@@ -88,7 +88,10 @@ it('/login - POST - deve retornar status 401 e uma mensagem de erro caso o usuar
   expect(response.status).to.equal(401);
 });
 it("/login/role - GET - deve retonar status 200 e a role do usuario logado na aplicação", async () => {
-  const response = await chai.request(app).get("/login/role")
+  const tokenValid = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6InVzZXIiLCJpYXQiOjE2NzgxMjkyNzYsImV4cCI6MTcyMTMyOTI3Nn0.lIiw4TS_EoQUAgQ1acKCoWVGuBx0PZ6YnCSrMnPYhsw"
+  const response = await chai.request(app).get("/login/role").set({ 'Authorization': tokenValid });
   expect(response.status).to.be.equal(200)
+  expect(response.body).to.property('role')
+  expect(response.body).to.deep.equal({ role: 'user' });
 })
 })
