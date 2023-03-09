@@ -10,6 +10,7 @@ const authController = new AuthController(authService);
 
 authRoute.post('/', (req: Request, res: Response, next: NextFunction) => authController
   . login(req, res, next));
-authRoute.get('/role', (req: Request, res: Response) => res.sendStatus(200));
+authRoute.get('/role', (req: Request, res: Response, next: NextFunction) => authController
+  . validate(req, res, next));
 
 export default authRoute;

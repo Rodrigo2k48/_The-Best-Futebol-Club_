@@ -20,4 +20,9 @@ export default class TokenService implements IJwtService {
     const token = jwt.sign(dto, this._secret, this._config);
     return token;
   }
+
+  validate(token: string): jwt.JwtPayload | string {
+    const isValidToken = jwt.verify(token, this._secret, this._config);
+    return isValidToken;
+  }
 }

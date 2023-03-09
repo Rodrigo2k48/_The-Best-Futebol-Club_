@@ -1,4 +1,5 @@
 import { ModelStatic } from 'sequelize';
+import { JwtPayload } from 'jsonwebtoken';
 import User from '../../database/models/User';
 import IAuthService from '../interfaces/IAuthService';
 import { IJwtService } from '../shared/interfaces/IJwtToken';
@@ -34,5 +35,10 @@ export default class AuthService implements IAuthService {
   public async getUserInDb(email: string): Promise<User> {
     const user = await this.model.findAll({ where: { email } });
     return user[0];
+  }
+
+  public authToken(Authorization: string): JwtPayload | string {
+    const tokenValidate = this.tokenService.validate(Authorization);
+    return tokenValidate;
   }
 }
