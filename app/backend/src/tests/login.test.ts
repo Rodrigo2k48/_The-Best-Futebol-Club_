@@ -94,4 +94,11 @@ it("/login/role - GET - deve retonar status 200 e a role do usuario logado na ap
   expect(response.body).to.property('role')
   expect(response.body).to.deep.equal({ role: 'user' });
 })
+it("/login/role - GET - deve retonar status 401 e uma mensagem de erro caso o usuario estiver com um token invalido", async () => {
+  const tokenInvalid = "eyJhbGciOiJIUzI1iIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6InVzZXIiLCJpYXQiOjE2NzgxMjkyNzYsImV4cCI6MTcyMTMyOTI3Nn0.lIiw4TS_EoQUAgQ1acKCoWVGuBx0PZ6YnCSrMnPYhsw"
+  const response = await chai.request(app).get("/login/role").set({ 'Authorization': tokenInvalid });
+  expect(response.status).to.be.equal(401)
+  expect(response.body).to.property('mesagem')
+  expect(response.body.mesagem).to.equal("Token must be a valid token");
+})
 })
