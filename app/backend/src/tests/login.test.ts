@@ -108,7 +108,7 @@ it("/login/role - GET - deve retonar status 401 e uma mensagem de erro caso o us
     .get("/login/role")
     .end((err, res) => {
       expect(res).to.have.status(401);
-      expect(res.body).to.have.property('message').equal('Invalid authorization');
+      expect(res.body).to.have.property('message').equal('Token not found');
       done();
     });
   })

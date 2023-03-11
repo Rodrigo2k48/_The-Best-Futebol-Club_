@@ -26,14 +26,16 @@ export default class AuthController {
   }
 
   public async validate(req: Request, res: Response, next: NextFunction):Promise<Response | void> {
+    const { authorization } = req.headers;
     try {
-      const { authorization } = req.headers;
       if (authorization) {
         const isTokenValid = this.service.authToken(authorization as string);
         const { role } = isTokenValid as JwtPayload;
         return res.status(200).json({ role });
       }
-      throw new HttpException(401, 'Invalid authorization');
+      if (!authorization) {
+        throw new HttpException(401, 'Token not found');
+      }
     } catch (error) {
       next(error);
     }
