@@ -103,4 +103,13 @@ it("/login/role - GET - deve retonar status 401 e uma mensagem de erro caso o us
   })
   expect(response.body).to.have.property('message')
 })
+it("/login/role - GET - deve retonar status 401 e uma mensagem de erro caso o usuario estiver com um token", (done) => {
+  chai.request(app)
+    .get("/login/role")
+    .end((err, res) => {
+      expect(res).to.have.status(401);
+      expect(res.body).to.have.property('message').equal('Invalid authorization');
+      done();
+    });
+  })
 })
