@@ -33,6 +33,7 @@ export default class AuthController {
         const { role } = isTokenValid as JwtPayload;
         return res.status(200).json({ role });
       }
+      throw new HttpException(401, 'Invalid authorization');
     } catch (error) {
       next(error);
     }
