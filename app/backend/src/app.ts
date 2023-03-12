@@ -2,6 +2,7 @@ import express from 'express';
 import authRoute from './api/routers/authRoute';
 import teamsRoute from './api/routers/teamsRoute';
 import HttpErrorMiddleware from './api/middlewares/HttpErrorMiddleware';
+import matchesRoute from './api/routers/matchesRoute';
 
 class App {
   public app: express.Express;
@@ -31,6 +32,7 @@ class App {
   private initRoutes(): void {
     this.app.use('/teams', teamsRoute);
     this.app.use('/login', authRoute);
+    this.app.use('/matches', matchesRoute);
   }
 
   private errorHandler(): void {
