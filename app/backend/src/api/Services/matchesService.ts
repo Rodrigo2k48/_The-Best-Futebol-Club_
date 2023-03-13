@@ -11,6 +11,9 @@ export default class MatchesService implements IMatchesService {
     if (progress === 'true') {
       return matches.filter((match) => match.inProgress === true);
     }
+    if (progress === 'false') {
+      return matches.filter((match) => match.inProgress === false);
+    }
   }
 
   async getAllMatches(): Promise<Matche[]> {
