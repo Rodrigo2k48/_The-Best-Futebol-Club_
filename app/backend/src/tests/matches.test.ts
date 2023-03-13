@@ -129,4 +129,13 @@ describe("testes na rota Matches na aplicação",  async () => {
       expect(response.body[0].id).to.equal(1)
       expect(response.body[0].awayTeam.teamName).to.equal("Grêmio")
     })
+    it("/matches/id/finish - PATCH - deve retonar status 401 e uma mensagem de erro caso o usuario não estiver com um token", (done) => {
+      chai.request(app)
+        .patch("/matches/1/finish")
+        .end((err, res) => {
+          expect(res).to.have.status(401);
+          expect(res.body).to.have.property('message').equal('Token not found');
+          done();
+        });
+      })
 })
