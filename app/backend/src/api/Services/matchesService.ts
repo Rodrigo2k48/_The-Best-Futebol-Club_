@@ -6,6 +6,13 @@ import IMatchesService from '../interfaces/IMatchesService';
 export default class MatchesService implements IMatchesService {
   protected model: ModelStatic<Matche> = Matche;
 
+  async getAllByProgress(progress: string | boolean): Promise<Matche[] | void> {
+    const matches = await this.getAllMatches();
+    if (progress === 'true') {
+      return matches.filter((match) => match.inProgress === true);
+    }
+  }
+
   async getAllMatches(): Promise<Matche[]> {
     const matches = await this.model.findAll({
       include: [
