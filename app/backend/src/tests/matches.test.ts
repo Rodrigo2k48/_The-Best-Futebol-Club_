@@ -9,7 +9,7 @@ import { Model } from "sequelize"
 chai.use(chaiHttp)
 const {expect} = chai
 
-describe("testes na rota Matches na aplicação", () => {
+describe("testes na rota Matches na aplicação",  async () => {
     afterEach(() => {
         Sinon.restore()
     })
@@ -46,9 +46,8 @@ describe("testes na rota Matches na aplicação", () => {
           ] as unknown as Matche[]
       
         Sinon.stub(Model, 'findAll').resolves(matcheMock)
-      // Action     
       const response = await chai.request(app).get('/matches')
-      // Assertion
+      
       expect(response.status).to.equal(200)
       expect(response.body).to.deep.equal(matcheMock)
     })
