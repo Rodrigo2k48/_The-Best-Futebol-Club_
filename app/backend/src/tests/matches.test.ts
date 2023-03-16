@@ -4,6 +4,7 @@ import Sinon from "sinon"
 import { app } from "../app"
 import Matche from "../database/models/Matche"
 import { Model } from "sequelize"
+import jwt from "jsonwebtoken"
 
 
 chai.use(chaiHttp)
@@ -146,5 +147,14 @@ describe("testes na rota Matches na aplicação",  async () => {
           "message": "Token must be a valid token"
         })
         expect(response.body).to.have.property('message')
+    })
+    it("/matches/id/finish - PATCH - caso o usuario esteja com um token valido, deve retornar status 200 e caso exista a partida passada por parametro da requisição via ID, uma mensagem afirmando a atualização da partida deve ser passada para o usuario", async () => {
+      const tokenValid = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc4NzM1NzQ2LCJleHAiOjE3MjE5MzU3NDZ9.2En2VOz8pkAFMyyQp6ryyrXJejfmW08mYK-20Eh-Ffo"
+      Sinon.stub(jwt, 'verify').callsFake(() => Promise.resolve({ success: 'Token is valid' }))
+      Sinon.stub(Model, 'update').resolves([1])
+      const response = await chai.request(app).patch('/matches/1/finish')
+      .set({Authorization: tokenValid});
+      expect (response.status).to.be.equal(200);
+      expect (response.body).to.be.deep.equal({ message: 'Finished' })
     })
 })
