@@ -16,6 +16,15 @@ export default class MatchesService implements IMatchesService {
     }
   }
 
+  async updateProgressMatch(id:number): Promise<string | void> {
+    // https://medium.com/@sarahdherr/sequelizes-update-method-example-included-39dfed6821d
+    await this.model.update(
+      { inProgress: false },
+      { where: { id } },
+    );
+    return 'Finished';
+  }
+
   async getAllMatches(): Promise<Matche[]> {
     const matches = await this.model.findAll({
       include: [
@@ -32,5 +41,26 @@ export default class MatchesService implements IMatchesService {
       ],
     });
     return matches;
+  }
+
+  async getMacheByID(id: string | number): Promise<Matche> {
+    const match = await this.model.findAll({
+      where: {
+        id,
+      },
+      include: [
+        {
+          model: Team,
+          as: 'homeTeam',
+          attributes: { exclude: ['id'] },
+        },
+        {
+          model: Team,
+          as: 'awayTeam',
+          attributes: { exclude: ['id'] },
+        },
+      ],
+    });
+    return match[0].dataValues;
   }
 }

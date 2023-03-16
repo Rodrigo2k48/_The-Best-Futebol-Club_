@@ -15,5 +15,4 @@ export default function validationToken(req: Request, res: Response, next: NextF
   } catch (e) {
     throw new HttpException(401, 'Token must be a valid token');
   }
-  next();
 }

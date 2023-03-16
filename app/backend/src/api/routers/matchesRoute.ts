@@ -11,10 +11,9 @@ matchesRoute.get('/', (req: Request, res: Response, next: NextFunction) => match
   .readAllMatches(req, res, next));
 matchesRoute.patch(
   '/:id/finish',
+  verifyToken,
   (req: Request, res: Response, next: NextFunction) =>
-    verifyToken(req, res, next),
-  (req: Request, res: Response) => res
-    . sendStatus(200),
+    matchesController.matcheFinisher(req, res, next),
 );
 
 export default matchesRoute;
