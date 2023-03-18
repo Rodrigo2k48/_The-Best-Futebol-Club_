@@ -157,4 +157,22 @@ describe("testes na rota Matches na aplicação",  async () => {
       expect (response.status).to.be.equal(200);
       expect (response.body).to.be.deep.equal({ message: 'Finished' })
     })
+    it("/matches/id - PATCH - deve retonar status 401 e uma mensagem de erro caso o usuario não estiver com um token", (done) => {
+      chai.request(app)
+        .patch("/matches/1")
+        .end((err, res) => {
+          expect(res).to.have.status(401);
+          expect(res.body).to.have.property('message').equal('Token not found');
+          done();
+        });
+    })
+    it("/matches/id- PATCH - deve retonar status 401 e uma mensagem de erro caso o usuario estiver com um token invalido", async () => {
+        const tokenInvalid = "eyJhbGciOiJIUzI1iIsnR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6InVzZXIiLCJpYXQiOjE2NzgxMjkyNzYsImV4cCI6MTcyMTMyOTI3Nn0.lIiw4TS_EoQUAgQ1acKCoWVGuBx0PZ6YnCSrMnPYhsw"
+        const response = await chai.request(app).patch("/matches/2").set({ 'Authorization': tokenInvalid });
+        expect(response.status).to.be.equal(401)  
+        expect(response.body).to.deep.equal({
+          "message": "Token must be a valid token"
+        })
+        expect(response.body).to.have.property('message')
+    })
 })
