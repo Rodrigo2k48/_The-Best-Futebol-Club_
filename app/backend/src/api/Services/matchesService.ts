@@ -25,6 +25,15 @@ export default class MatchesService implements IMatchesService {
     return 'Finished';
   }
 
+  async updateMatchGoalsById(id: string, homeTeamGoals: number, awayTeamGoals: number):
+  Promise<string> {
+    await this.model.update(
+      { homeTeamGoals, awayTeamGoals },
+      { where: { id } },
+    );
+    return 'Goals updated successfully';
+  }
+
   async getAllMatches(): Promise<Matche[]> {
     const matches = await this.model.findAll({
       include: [

@@ -15,6 +15,11 @@ matchesRoute.patch(
   (req: Request, res: Response, next: NextFunction) =>
     matchesController.matcheFinisher(req, res, next),
 );
-matchesRoute.patch('/:id', verifyToken, (_req: Request, res: Response) => res.sendStatus(200));
+matchesRoute.patch(
+  '/:id',
+  verifyToken,
+  (req: Request, res: Response, next:NextFunction) => matchesController
+    . updateMatchGoals(req, res, next),
+);
 
 export default matchesRoute;
