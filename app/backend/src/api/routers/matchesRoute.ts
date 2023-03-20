@@ -21,5 +21,6 @@ matchesRoute.patch(
   (req: Request, res: Response, next:NextFunction) => matchesController
     . updateMatchGoals(req, res, next),
 );
+matchesRoute.post('/', verifyToken, (req: Request, res: Response) => res.sendStatus(200));
 
 export default matchesRoute;
