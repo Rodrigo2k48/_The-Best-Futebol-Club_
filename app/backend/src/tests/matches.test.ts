@@ -217,6 +217,7 @@ describe("testes na rota Matches na aplicação",  async () => {
       }
       Sinon.stub(Model, 'create').resolves(outputMock as unknown as Matche)
       Sinon.stub(ValidateMatch.prototype, "checkIfMatchDuplicate").resolves(false)
+      Sinon.stub(ValidateMatch.prototype, "checkIfTeamExistsIndB").resolves(true)
       const newMatcheMock = {
         "homeTeamId": 14,
         "awayTeamId": 8, 
@@ -251,5 +252,31 @@ describe("testes na rota Matches na aplicação",  async () => {
       const response = await chai.request(app).post("/matches").set({'Authorization': tokenValid}).send(newMatcheMock)
       expect(response.status).to.equal(422)
       expect(response.body).to.deep.equal({message: "It is not possible to create a match with two equal teams"})
+    })
+    it("/matches - POST - deve retornar status 404 e uma mensagem de erro caso o usuario tente cadastrar um time que não consta registrado no banco de dados", async () => {
+      const tokenValid = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc4NzM1NzQ2LCJleHAiOjE3MjE5MzU3NDZ9.2En2VOz8pkAFMyyQp6ryyrXJejfmW08mYK-20Eh-Ffo"
+      const teamsOutput = [    { id: 99, teamName: "Rodoviaria" },    { id: 36, teamName: "Palmeiras" }  ] as unknown as Team[];
+    
+        Sinon.stub(Model, 'findAll').resolves(teamsOutput);
+      const outputMock = {
+      "id": 40,
+      "homeTeamId": 36,
+      "homeTeamGoals": 2,
+      "awayTeamId": 36,
+      "awayTeamGoals": 2,
+      "inProgress": true, 
+    }
+      const newMatcheMock = {
+        "homeTeamId": 336,
+        "awayTeamId": 36, 
+        "homeTeamGoals": 2,
+        "awayTeamGoals": 2,
+      }
+      Sinon.stub(ValidateMatch.prototype, "checkIfMatchDuplicate").resolves(false)
+      Sinon.stub(ValidateMatch.prototype, "checkIfTeamExistsIndB").resolves(false)
+      Sinon.stub(Model, 'create').resolves(outputMock as unknown as Matche)
+      const response = await chai.request(app).post("/matches").set({'Authorization': tokenValid}).send(newMatcheMock)
+      expect(response.status).to.equal(404)
+      expect(response.body).to.deep.equal({ message:"There is no team with such id!"})
     })
 })
