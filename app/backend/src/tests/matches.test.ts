@@ -5,6 +5,8 @@ import { app } from "../app"
 import Matche from "../database/models/Matche"
 import { Model } from "sequelize"
 import jwt from "jsonwebtoken"
+import TeamsService from "../api/Services/teamsService"
+import ValidateMatch from "../api/middlewares/validateMatch"
 
 
 chai.use(chaiHttp)
@@ -214,11 +216,12 @@ describe("testes na rota Matches na aplicação",  async () => {
       }
       Sinon.stub(Model, 'create').resolves(outputMock as unknown as Matche)
       const newMatcheMock = {
-        "homeTeamId": 16,
+        "homeTeamId": 14,
         "awayTeamId": 8, 
         "homeTeamGoals": 2,
         "awayTeamGoals": 2,
       }
+      Sinon.stub(ValidateMatch.prototype, "checkIfMatchDuplicate").resolves(false)
       const response = await chai.request(app).post("/matches").set({'Authorization': tokenValid}).send(newMatcheMock)
       expect(response.status).to.equal(201)
       expect(response.body).to.deep.equal(outputMock as unknown as Matche)
@@ -240,8 +243,11 @@ describe("testes na rota Matches na aplicação",  async () => {
         "homeTeamGoals": 2,
         "awayTeamGoals": 2,
       }
+      Sinon.stub(ValidateMatch.prototype, "checkIfMatchDuplicate").resolves(true)
       const response = await chai.request(app).post("/matches").set({'Authorization': tokenValid}).send(newMatcheMock)
+      console.log(response.body);
+      
       expect(response.status).to.equal(422)
-      expect(response.body).to.equal({message: "It is not possible to create a match with two equal teams"})
+      expect(response.body).to.deep.equal({message: "It is not possible to create a match with two equal teams"})
     })
 })

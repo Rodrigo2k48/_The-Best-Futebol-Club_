@@ -3,6 +3,8 @@ import Team from '../../database/models/Team';
 import Matche from '../../database/models/Matche';
 import IMatchesService from '../interfaces/IMatchesService';
 import IMatch from '../interfaces/IMach';
+import ValidateMatch from '../middlewares/validateMatch';
+import HttpException from '../shared/HttpException';
 
 export default class MatchesService implements IMatchesService {
   protected model: ModelStatic<Matche> = Matche;
@@ -80,6 +82,11 @@ export default class MatchesService implements IMatchesService {
       homeTeamGoals,
       awayTeamGoals,
     } = dto;
+    const validate = new ValidateMatch(homeTeamId, awayTeamId);
+    const isvalid = await validate.checkIfMatchDuplicate();
+    if (isvalid) {
+      throw new HttpException(422, 'It is not possible to create a match with two equal teams');
+    }
     const newMatch = await this.model.create({
       homeTeamId,
       awayTeamId,
