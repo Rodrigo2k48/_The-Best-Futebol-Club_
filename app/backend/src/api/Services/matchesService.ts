@@ -80,19 +80,13 @@ export default class MatchesService implements IMatchesService {
       homeTeamGoals,
       awayTeamGoals,
     } = dto;
-    const [match, created] = await this.model.findOrCreate({
-      where: { homeTeamId,
-        awayTeamId,
-        homeTeamGoals,
-        awayTeamGoals },
-      defaults: {
-        inProgress: true,
-      },
-
+    const newMatch = await this.model.create({
+      homeTeamId,
+      awayTeamId,
+      homeTeamGoals,
+      awayTeamGoals,
+      inProgress: true,
     });
-    if (!created) {
-      return created;
-    }
-    return match;
+    return newMatch;
   }
 }
