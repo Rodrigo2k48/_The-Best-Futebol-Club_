@@ -2,6 +2,7 @@ import { ModelStatic } from 'sequelize';
 import Team from '../../database/models/Team';
 import Matche from '../../database/models/Matche';
 import IMatchesService from '../interfaces/IMatchesService';
+import IMatch from '../interfaces/IMach';
 
 export default class MatchesService implements IMatchesService {
   protected model: ModelStatic<Matche> = Matche;
@@ -71,5 +72,27 @@ export default class MatchesService implements IMatchesService {
       ],
     });
     return match[0].dataValues;
+  }
+
+  async createMatch(dto: IMatch): Promise<Matche | boolean> {
+    const { homeTeamId,
+      awayTeamId,
+      homeTeamGoals,
+      awayTeamGoals,
+    } = dto;
+    const [match, created] = await this.model.findOrCreate({
+      where: { homeTeamId,
+        awayTeamId,
+        homeTeamGoals,
+        awayTeamGoals },
+      defaults: {
+        inProgress: true,
+      },
+
+    });
+    if (!created) {
+      return created;
+    }
+    return match;
   }
 }

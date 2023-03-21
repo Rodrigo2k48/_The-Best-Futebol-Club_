@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import IMatch from '../interfaces/IMach';
 import IMatchesService from '../interfaces/IMatchesService';
 
 export default class MatchesController {
@@ -42,6 +43,18 @@ export default class MatchesController {
       const newMatchGoals = await this.service
         .updateMatchGoalsById(id, homeTeamGoals, awayTeamGoals);
       return res.status(200).json({ message: newMatchGoals });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async createNewMatch(req: Request, res: Response, next: NextFunction):
+  Promise<void | Response> {
+    try {
+      const { homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals } = req.body as IMatch;
+      const payload = { homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals };
+      const newMatch = await this.service.createMatch(payload);
+      return res.status(201).json(newMatch);
     } catch (error) {
       next(error);
     }
