@@ -212,15 +212,36 @@ describe("testes na rota Matches na aplicação",  async () => {
       "awayTeamGoals": 2,
       "inProgress": true, 
       }
-      Sinon.stub(Model, 'findOrCreate').resolves([outputMock as unknown as Matche, true])
+      Sinon.stub(Model, 'create').resolves(outputMock as unknown as Matche)
       const newMatcheMock = {
-        "homeTeamId": 16, // O valor deve ser o id do time
-        "awayTeamId": 8, // O valor deve ser o id do time
+        "homeTeamId": 16,
+        "awayTeamId": 8, 
         "homeTeamGoals": 2,
         "awayTeamGoals": 2,
       }
       const response = await chai.request(app).post("/matches").set({'Authorization': tokenValid}).send(newMatcheMock)
       expect(response.status).to.equal(201)
-      expect(response.body).to.deep.equal(outputMock)
+      expect(response.body).to.deep.equal(outputMock as unknown as Matche)
+    })
+    it("/matches - POST - deve retornar status 422 e uma mensagem de erro caso o usuario tente cadastrar um time competindo com ele mesmo no banco de dados", async () => {
+      const tokenValid = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc4NzM1NzQ2LCJleHAiOjE3MjE5MzU3NDZ9.2En2VOz8pkAFMyyQp6ryyrXJejfmW08mYK-20Eh-Ffo"
+      const outputMock = {
+      "id": 2,
+      "homeTeamId": 16,
+      "homeTeamGoals": 2,
+      "awayTeamId": 8,
+      "awayTeamGoals": 2,
+      "inProgress": true, 
+      }
+      Sinon.stub(Model, 'create').resolves(outputMock as unknown as Matche)
+      const newMatcheMock = {
+        "homeTeamId": 16,
+        "awayTeamId": 16, 
+        "homeTeamGoals": 2,
+        "awayTeamGoals": 2,
+      }
+      const response = await chai.request(app).post("/matches").set({'Authorization': tokenValid}).send(newMatcheMock)
+      expect(response.status).to.equal(422)
+      expect(response.body).to.equal({message: "It is not possible to create a match with two equal teams"})
     })
 })
