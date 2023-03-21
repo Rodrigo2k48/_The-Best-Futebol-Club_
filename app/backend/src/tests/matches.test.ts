@@ -202,4 +202,25 @@ describe("testes na rota Matches na aplicação",  async () => {
       })
       expect(response.body).to.have.property('message')
     })
+    it("/matches - POST - deve retornar status 201 e caso não exista a partida registada no banco de dados, deve retornar a partida cadastrada com sucesso", async () => {
+      const tokenValid = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc4NzM1NzQ2LCJleHAiOjE3MjE5MzU3NDZ9.2En2VOz8pkAFMyyQp6ryyrXJejfmW08mYK-20Eh-Ffo"
+      const outputMock = {
+      "id": 2,
+      "homeTeamId": 16,
+      "homeTeamGoals": 2,
+      "awayTeamId": 8,
+      "awayTeamGoals": 2,
+      "inProgress": true, 
+      }
+      Sinon.stub(Model, 'findOrCreate').resolves([outputMock as unknown as Matche, true])
+      const newMatcheMock = {
+        "homeTeamId": 16, // O valor deve ser o id do time
+        "awayTeamId": 8, // O valor deve ser o id do time
+        "homeTeamGoals": 2,
+        "awayTeamGoals": 2,
+      }
+      const response = await chai.request(app).post("/matches").set({'Authorization': tokenValid}).send(newMatcheMock)
+      expect(response.status).to.equal(201)
+      expect(response.body).to.deep.equal(outputMock)
+    })
 })
