@@ -76,19 +76,19 @@ export default class MatchesService implements IMatchesService {
     return match[0].dataValues;
   }
 
-  async createMatch(dto: IMatch): Promise<Matche | boolean> {
-    const { homeTeamId,
-      awayTeamId,
-      homeTeamGoals,
-      awayTeamGoals,
+  async createMatch(dto: IMatch): Promise<Matche | void> {
+    const { homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals,
     } = dto;
-    const validate = new ValidateMatch(homeTeamId, awayTeamId);
-    const isvalid = await validate.checkIfMatchDuplicate();
-    if (isvalid) {
+    const validateMatch = new ValidateMatch(homeTeamId, awayTeamId);
+    const validateDuplicate = await validateMatch.checkIfMatchDuplicate();
+    const validateExists = await validateMatch.checkIfTeamExistsIndB();
+    if (validateExists === false) {
+      throw new HttpException(404, 'There is no team with such id!');
+    }
+    if (validateDuplicate === true) {
       throw new HttpException(422, 'It is not possible to create a match with two equal teams');
     }
-    const newMatch = await this.model.create({
-      homeTeamId,
+    const newMatch = await this.model.create({ homeTeamId,
       awayTeamId,
       homeTeamGoals,
       awayTeamGoals,

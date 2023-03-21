@@ -8,5 +8,5 @@ export default interface IMatchesService {
   getMacheByID(id: string | number): Promise<Matche>
   updateMatchGoalsById(id: string | number, homeTeamGoals: number, awayTeamGoals: number):
   Promise<string>
-  createMatch(dto: IMatch): Promise<Matche | boolean>
+  createMatch(dto: IMatch): Promise<Matche | void>
 }

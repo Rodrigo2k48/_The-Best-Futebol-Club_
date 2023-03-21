@@ -17,4 +17,13 @@ export default class ValidateMatch {
     }
     return false;
   }
+
+  public async checkIfTeamExistsIndB(): Promise<boolean> {
+    const homeTeam = await new TeamsService().getTeamById(this._homeTeamId);
+    const awayTeam = await new TeamsService().getTeamById(this._awayTeamId);
+    if (homeTeam === null || awayTeam === null) {
+      return false;
+    }
+    return true;
+  }
 }
