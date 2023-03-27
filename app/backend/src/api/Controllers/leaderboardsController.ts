@@ -28,4 +28,18 @@ export default class LeaderboardsController {
       next(error);
     }
   }
+
+  async awayLeaderboard(req: Request, res:Response, next: NextFunction) {
+    try {
+      const teams = await this.team.getAllTeams();
+      const matches = await this.matches.getAllMatches();
+      const finalizedMatches = matches
+        .filter((match) => match.inProgress === false) as unknown as IMatch[];
+      const leaderboardStatus = this.service.getAllStatus(teams, finalizedMatches, false);
+      const sortLeaderboardStatus = this.service.tiebreaker(leaderboardStatus);
+      return res.status(200).json(sortLeaderboardStatus);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
