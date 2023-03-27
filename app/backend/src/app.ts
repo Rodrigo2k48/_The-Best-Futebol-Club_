@@ -3,6 +3,7 @@ import authRoute from './api/routers/authRoute';
 import teamsRoute from './api/routers/teamsRoute';
 import HttpErrorMiddleware from './api/middlewares/HttpErrorMiddleware';
 import matchesRoute from './api/routers/matchesRoute';
+import leaderboardRoute from './api/routers/leaderboardsRoute';
 
 class App {
   public app: express.Express;
@@ -33,6 +34,7 @@ class App {
     this.app.use('/teams', teamsRoute);
     this.app.use('/login', authRoute);
     this.app.use('/matches', matchesRoute);
+    this.app.use('/leaderboard', leaderboardRoute);
   }
 
   private errorHandler(): void {
