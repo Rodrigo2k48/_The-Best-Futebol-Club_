@@ -23,5 +23,8 @@ leaderboardRoute.get('/home', (
 
 leaderboardRoute.get('/away', (req: Request, res: Response, next: NextFunction) =>
   leaderboardController.awayLeaderboard(req, res, next));
+leaderboardRoute.get('/', (req: Request, res: Response, next: NextFunction) => {
+  leaderboardController.leaderboard(req, res, next);
+});
 
 export default leaderboardRoute;
