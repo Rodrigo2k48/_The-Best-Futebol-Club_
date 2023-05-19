@@ -13,9 +13,6 @@ class App {
     this.config();
     this.initRoutes();
     this.errorHandler();
-
-    // Não remover essa rota
-    this.app.get('/', (req, res) => res.json({ ok: true }));
   }
 
   private config():void {
@@ -38,7 +35,7 @@ class App {
   }
 
   private errorHandler(): void {
-    this.app.use(HttpErrorMiddleware);
+    this.app.use(HttpErrorMiddleware.error);
   }
 
   public start(PORT: string | number):void {
