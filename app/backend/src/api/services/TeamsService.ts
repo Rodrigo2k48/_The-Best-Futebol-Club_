@@ -1,6 +1,6 @@
 import { ModelStatic } from 'sequelize';
 import Team from '../../database/models/Team';
-import ITeamsService from '../interfaces/ITeamsService';
+import ITeamsService from './Interfaces/ITeamsService';
 
 export default class TeamsService implements ITeamsService {
   protected model: ModelStatic<Team> = Team;

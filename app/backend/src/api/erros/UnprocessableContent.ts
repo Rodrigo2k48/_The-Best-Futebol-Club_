@@ -1,6 +1,6 @@
 import HttpError from './HttpError';
 
-export default class UnprocessableContent extends HttpError {
+export default class UnprocessableContentError extends HttpError {
   public httpCode: number;
 
   public name: string;

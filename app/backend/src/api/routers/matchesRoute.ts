@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import MatchesController from '../Controllers/matchesController';
-import MatchesService from '../Services/matchesService';
+import MatchesController from '../controllers/MatchesController';
+import MatchesService from '../services/MatchesService';
 import verifyToken from '../middlewares/verifyToken';
 
 const matchesRoute = Router();

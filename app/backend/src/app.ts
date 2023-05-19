@@ -1,9 +1,9 @@
 import express from 'express';
-import authRoute from './api/routers/authRoute';
-import teamsRoute from './api/routers/teamsRoute';
+import authRoute from './api/Routes/authRoute';
+import teamsRoute from './api/Routes/teamsRoute';
 import HttpErrorMiddleware from './api/middlewares/HttpErrorMiddleware';
-import matchesRoute from './api/routers/matchesRoute';
-import leaderboardRoute from './api/routers/leaderboardsRoute';
+import matchesRoute from './api/Routes/matchesRoute';
+import leaderboardRoute from './api/Routes/leaderboardsRoute';
 
 class App {
   public app: express.Express;
