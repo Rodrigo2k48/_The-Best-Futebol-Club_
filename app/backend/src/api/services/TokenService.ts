@@ -1,7 +1,7 @@
 import * as jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
-import { IJwtService, ITokenUserInfo } from './interfaces/IJwtToken';
-import Unauthorized from '../errors/Unauthorized';
+import { IJwtService, ITokenUserInfo } from './Interfaces/IJwtToken';
+import Unauthorized from '../erros/Unauthorized';
 
 dotenv.config();
 

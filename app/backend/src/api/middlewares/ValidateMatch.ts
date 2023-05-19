@@ -1,4 +1,4 @@
-import TeamsService from '../Services/teamsService';
+import TeamsService from '../services/teamsService';
 
 export default class ValidateMatch {
   private _homeTeamId: number;

@@ -1,11 +1,11 @@
 import { ModelStatic } from 'sequelize';
 import { JwtPayload } from 'jsonwebtoken';
 import User from '../../database/models/User';
-import IAuthService from '../interfaces/IAuthService';
-import { IJwtService } from '../shared/interfaces/IJwtToken';
+import IAuthService from './Interfaces/IAuthService';
+import { IJwtService } from './Interfaces/IJwtToken';
 import IUser from '../interfaces/IUser';
-import ValidateUser from '../middlewares/validateUser';
-import Unauthorized from '../errors/Unauthorized';
+import ValidateUser from '../middlewares/ValidateUser';
+import Unauthorized from '../erros/Unauthorized';
 
 export default class AuthService implements IAuthService {
   protected model: ModelStatic<User> = User;

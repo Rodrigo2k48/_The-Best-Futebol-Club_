@@ -1,14 +1,13 @@
 import HttpError from './HttpError';
 
-export default class NotFound extends HttpError {
+export default class BadRequestError extends HttpError {
   public httpCode: number;
-
   public name: string;
 
-  constructor(message: string, httpCode = 404) {
+  constructor(message: string, httpCode = 400) {
     super(message);
 
     this.httpCode = httpCode;
-    this.name = 'NotFound';
+    this.name = 'BadRequest';
   }
 }

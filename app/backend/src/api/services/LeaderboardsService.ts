@@ -1,5 +1,5 @@
 import ILeaderboard from '../interfaces/ILeaderboard';
-import ILeaderboardService from '../interfaces/ILeaderboardService';
+import ILeaderboardService from './Interfaces/ILeaderboardService';
 import IMatch from '../interfaces/IMach';
 import ITeam from '../interfaces/ITeam';
 
