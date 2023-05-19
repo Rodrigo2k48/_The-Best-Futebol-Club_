@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
-import HttpException from '../shared/HttpException';
 import TokenService from '../shared/tokenService';
+import Unauthorized from '../errors/Unauthorized';
 
 export default function validationToken(req: Request, res: Response, next: NextFunction) {
   const { authorization } = req.headers;
   if (!authorization) {
-    throw new HttpException(401, 'Token not found');
+    throw new Unauthorized('Token not found');
   }
   try {
     const payload = new TokenService().validate(authorization);
@@ -13,6 +13,6 @@ export default function validationToken(req: Request, res: Response, next: NextF
     req.body.user = payload;
     next();
   } catch (e) {
-    throw new HttpException(401, 'Token must be a valid token');
+    throw new Unauthorized('Token must be a valid token');
   }
 }

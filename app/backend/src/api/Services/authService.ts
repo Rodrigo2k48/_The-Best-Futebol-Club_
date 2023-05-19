@@ -5,7 +5,7 @@ import IAuthService from '../interfaces/IAuthService';
 import { IJwtService } from '../shared/interfaces/IJwtToken';
 import IUser from '../interfaces/IUser';
 import ValidateUser from '../middlewares/validateUser';
-import HttpException from '../shared/HttpException';
+import Unauthorized from '../errors/Unauthorized';
 
 export default class AuthService implements IAuthService {
   protected model: ModelStatic<User> = User;
@@ -20,11 +20,11 @@ export default class AuthService implements IAuthService {
     const validate = new ValidateUser(email, password);
     const userInDb = await this.getUserInDb(email);
     if (!userInDb) {
-      throw new HttpException(401, 'Invalid email or password');
+      throw new Unauthorized('Invalid email or password');
     }
     const isValid = await validate.validateUser(userInDb.email, userInDb.password);
     if (!isValid) {
-      throw new HttpException(401, 'Invalid email or password');
+      throw new Unauthorized('Invalid email or password');
     }
     const { id, role } = userInDb;
     const userInfos = { id, role };
