@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
+import BadRequest from '../errors/BadRequest';
 import IAuthService from '../interfaces/IAuthService';
 import IUser from '../interfaces/IUser';
-import HttpException from '../shared/HttpException';
+import Unauthorized from '../errors/Unauthorized';
 
 export default class AuthController {
   protected service: IAuthService;
@@ -15,7 +16,7 @@ export default class AuthController {
     try {
       const { email, password } = req.body as IUser;
       if (!email || !password) {
-        throw new HttpException(400, 'All fields must be filled');
+        throw new BadRequest('Email or password is required');
       }
       const payload = { email, password };
       const token = await this.service.generateToken(payload);
@@ -25,7 +26,7 @@ export default class AuthController {
     }
   }
 
-  public async validate(req: Request, res: Response, next: NextFunction):Promise<Response | void> {
+  public async validate(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     const { authorization } = req.headers;
     try {
       if (authorization) {
@@ -34,7 +35,7 @@ export default class AuthController {
         return res.status(200).json({ role });
       }
       if (!authorization) {
-        throw new HttpException(401, 'Token not found');
+        throw new Unauthorized('Token not found');
       }
     } catch (error) {
       next(error);

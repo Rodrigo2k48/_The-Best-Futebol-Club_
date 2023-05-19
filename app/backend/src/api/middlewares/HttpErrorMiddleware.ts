@@ -1,10 +1,14 @@
-import { NextFunction, Request, Response } from 'express';
-import HttpException from '../shared/HttpException';
+import { ErrorRequestHandler } from 'express';
+import HttpError from '../errors/HttpError';
 
-const HttpErrorMiddleware = (err: Error, req: Request, res: Response, next: NextFunction) => {
-  const { status, message } = err as HttpException;
-  res.status(status || 500).json({ message });
-  next(err);
-};
+export default class HttpErrorMiddleware {
+  public static error: ErrorRequestHandler = (err, _req, res, _next) => {
+    if (err instanceof HttpError) {
+      const { httpCode, message } = err;
 
-export default HttpErrorMiddleware;
+      return res.status(httpCode).json({ message });
+    }
+
+    return res.status(500).json({ message: err.message });
+  };
+}

@@ -4,7 +4,8 @@ import Matche from '../../database/models/Matche';
 import IMatchesService from '../interfaces/IMatchesService';
 import IMatch from '../interfaces/IMach';
 import ValidateMatch from '../middlewares/validateMatch';
-import HttpException from '../shared/HttpException';
+import NotFound from '../errors/NotFound';
+import UnprocessableContent from '../errors/UnprocessableContent';
 
 export default class MatchesService implements IMatchesService {
   protected model: ModelStatic<Matche> = Matche;
@@ -83,10 +84,10 @@ export default class MatchesService implements IMatchesService {
     const validateDuplicate = await validateMatch.checkIfMatchDuplicate();
     const validateExists = await validateMatch.checkIfTeamExistsIndB();
     if (validateExists === false) {
-      throw new HttpException(404, 'There is no team with such id!');
+      throw new NotFound('There is no team with such id!');
     }
     if (validateDuplicate === true) {
-      throw new HttpException(422, 'It is not possible to create a match with two equal teams');
+      throw new UnprocessableContent('It is not possible to create a match with two equal teams');
     }
     const newMatch = await this.model.create({ homeTeamId,
       awayTeamId,
