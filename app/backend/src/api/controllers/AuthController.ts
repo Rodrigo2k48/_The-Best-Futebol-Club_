@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
-import BadRequest from '../errors/BadRequest';
-import IAuthService from '../interfaces/IAuthService';
+import BadRequest from '../erros/BadRequest';
+import IAuthService from '../services/Interfaces/IAuthService';
 import IUser from '../interfaces/IUser';
-import Unauthorized from '../errors/Unauthorized';
+import Unauthorized from '../erros/Unauthorized';
 
 export default class AuthController {
   protected service: IAuthService;

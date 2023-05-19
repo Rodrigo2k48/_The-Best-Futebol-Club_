@@ -1,5 +1,5 @@
 import { JwtPayload } from 'jsonwebtoken';
-import IUser from './IUser';
+import IUser from '../../interfaces/IUser';
 
 export default interface IAuthService {
   generateToken(dto: IUser): Promise<string>;

@@ -1,11 +1,11 @@
 import { ModelStatic } from 'sequelize';
 import Team from '../../database/models/Team';
 import Matche from '../../database/models/Matche';
-import IMatchesService from '../interfaces/IMatchesService';
+import IMatchesService from './Interfaces/IMatchesService';
 import IMatch from '../interfaces/IMach';
-import ValidateMatch from '../middlewares/validateMatch';
-import NotFound from '../errors/NotFound';
-import UnprocessableContent from '../errors/UnprocessableContent';
+import ValidateMatch from '../middlewares/ValidateMatch';
+import NotFound from '../erros/NotFound';
+import UnprocessableContent from '../erros/UnprocessableContent';
 
 export default class MatchesService implements IMatchesService {
   protected model: ModelStatic<Matche> = Matche;
@@ -20,7 +20,7 @@ export default class MatchesService implements IMatchesService {
     }
   }
 
-  async updateProgressMatch(id:number): Promise<string | void> {
+  async updateProgressMatch(id: number): Promise<string | void> {
     // https://medium.com/@sarahdherr/sequelizes-update-method-example-included-39dfed6821d
     await this.model.update(
       { inProgress: false },
@@ -30,7 +30,7 @@ export default class MatchesService implements IMatchesService {
   }
 
   async updateMatchGoalsById(id: string, homeTeamGoals: number, awayTeamGoals: number):
-  Promise<string> {
+    Promise<string> {
     await this.model.update(
       { homeTeamGoals, awayTeamGoals },
       { where: { id } },
@@ -89,7 +89,8 @@ export default class MatchesService implements IMatchesService {
     if (validateDuplicate === true) {
       throw new UnprocessableContent('It is not possible to create a match with two equal teams');
     }
-    const newMatch = await this.model.create({ homeTeamId,
+    const newMatch = await this.model.create({
+      homeTeamId,
       awayTeamId,
       homeTeamGoals,
       awayTeamGoals,

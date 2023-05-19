@@ -1,5 +1,5 @@
-import Matche from '../../database/models/Matche';
-import IMatch from './IMach';
+import Matche from '../../../database/models/Matche';
+import IMatch from '../../interfaces/IMach';
 
 export default interface IMatchesService {
   getAllMatches(): Promise<Matche[]>

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import TokenService from '../shared/tokenService';
-import Unauthorized from '../errors/Unauthorized';
+import TokenService from '../services/TokenService';
+import Unauthorized from '../erros/Unauthorized';
 
 export default function validationToken(req: Request, res: Response, next: NextFunction) {
   const { authorization } = req.headers;

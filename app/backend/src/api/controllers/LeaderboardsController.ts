@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import IMatch from '../interfaces/IMach';
-import LeaderboardsService from '../Services/leaderboardsService';
-import MatchesService from '../Services/matchesService';
-import TeamsService from '../Services/teamsService';
+import LeaderboardsService from '../services/LeaderboardsService';
+import MatchesService from '../services/MatchesService';
+import TeamsService from '../services/TeamsService';
 
 export default class LeaderboardsController {
   service: LeaderboardsService;

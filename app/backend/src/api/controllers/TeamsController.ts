@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import ITeamsService from '../interfaces/ITeamsService';
+import ITeamsService from '../services/Interfaces/ITeamsService';
 
 export default class TeamsController {
   protected service: ITeamsService;

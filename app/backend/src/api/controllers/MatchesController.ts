@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import IMatch from '../interfaces/IMach';
-import IMatchesService from '../interfaces/IMatchesService';
+import IMatchesService from '../services/Interfaces/IMatchesService';
 
 export default class MatchesController {
   protected service: IMatchesService;

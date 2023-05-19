@@ -1,6 +1,6 @@
 import HttpError from './HttpError';
 
-export default class Unauthorized extends HttpError {
+export default class UnauthorizedError extends HttpError {
   public httpCode: number;
   public name: string;
 
