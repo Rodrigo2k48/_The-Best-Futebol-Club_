@@ -32,7 +32,7 @@ export default class AuthService implements IAuthService {
     return token;
   }
 
-  public async getUserInDb(email: string): Promise<User> {
+  public async getUserInDb(email: string): Promise<User | null> {
     const user = await this.model.findAll({ where: { email } });
     return user[0];
   }

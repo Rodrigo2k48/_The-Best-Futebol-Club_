@@ -29,14 +29,12 @@ export default class AuthController {
   public async validate(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     const { authorization } = req.headers;
     try {
-      if (authorization) {
-        const isTokenValid = this.service.authToken(authorization as string);
-        const { role } = isTokenValid as JwtPayload;
-        return res.status(200).json({ role });
-      }
       if (!authorization) {
         throw new Unauthorized('Token not found');
       }
+        const isTokenValid = this.service.authToken(authorization as string);
+        const { role } = isTokenValid as JwtPayload;
+        return res.status(200).json({ role });
     } catch (error) {
       next(error);
     }
