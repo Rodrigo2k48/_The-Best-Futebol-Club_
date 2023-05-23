@@ -26,7 +26,7 @@ describe('GET /teams', async () => {
   })
   describe('em caso de erro no banco de dados', () => {
     it("deve retornar um erro e enviar status 500", async () => {
-      sinon.stub(Model, 'findAll').throws(new Error('Erro no banco de dados'));
+      sinon.stub(Model, 'findAll').rejects(new Error('Erro no banco de dados'));
       const {status, body} = await chai.request(app).get('/teams');
 
       expect(status).to.equal(HTTP_STATUS.InternalServerError);
