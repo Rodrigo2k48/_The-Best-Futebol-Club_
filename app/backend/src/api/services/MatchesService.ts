@@ -56,27 +56,6 @@ export default class MatchesService implements IMatchesService {
     return matches;
   }
 
-  async getMacheByID(id: string | number): Promise<Matche> {
-    const match = await this.model.findAll({
-      where: {
-        id,
-      },
-      include: [
-        {
-          model: Team,
-          as: 'homeTeam',
-          attributes: { exclude: ['id'] },
-        },
-        {
-          model: Team,
-          as: 'awayTeam',
-          attributes: { exclude: ['id'] },
-        },
-      ],
-    });
-    return match[0].dataValues;
-  }
-
   async createMatch(dto: IMatch): Promise<Matche | void> {
     const { homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals,
     } = dto;
