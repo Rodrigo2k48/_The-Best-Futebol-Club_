@@ -4,6 +4,7 @@ import BadRequest from '../erros/BadRequest';
 import IAuthService from '../services/Interfaces/IAuthService';
 import IUser from '../interfaces/IUser';
 import Unauthorized from '../erros/Unauthorized';
+import HTTP_STATUS from '../shared/htttpStatusCode';
 
 export default class AuthController {
   protected service: IAuthService;
@@ -14,13 +15,13 @@ export default class AuthController {
   public async login(req: Request, res: Response, next: NextFunction):
   Promise<Response | void> {
     try {
-      const { email, password } = req.body as IUser;
+      const { email, password } = req.body;
       if (!email || !password) {
         throw new BadRequest('Email or password is required');
       }
       const payload = { email, password };
       const token = await this.service.generateToken(payload);
-      return res.status(200).json({ token });
+      return res.status(HTTP_STATUS.SuccessOK).json({ token });
     } catch (error) {
       next(error);
     }
@@ -34,7 +35,7 @@ export default class AuthController {
       }
         const isTokenValid = this.service.authToken(authorization as string);
         const { role } = isTokenValid as JwtPayload;
-        return res.status(200).json({ role });
+        return res.status(HTTP_STATUS.SuccessOK).json({ role });
     } catch (error) {
       next(error);
     }

@@ -26,7 +26,7 @@ export default class TokenService implements IJwtService {
     try {
       const isValidToken = jwt.verify(token, this._secret, this._config);
       return isValidToken;
-    } catch (err) {
+    } catch (_err) {
       throw new Unauthorized('Token must be a valid token');
     }
   }

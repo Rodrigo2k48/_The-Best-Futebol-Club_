@@ -3,6 +3,7 @@ import IMatch from '../interfaces/IMach';
 import LeaderboardsService from '../services/LeaderboardsService';
 import MatchesService from '../services/MatchesService';
 import TeamsService from '../services/TeamsService';
+import HTTP_STATUS from '../shared/htttpStatusCode';
 
 export default class LeaderboardsController {
   service: LeaderboardsService;
@@ -23,7 +24,7 @@ export default class LeaderboardsController {
         unknown as IMatch[];
       const leaderboardStatus = this.service.getAllStatus(teams, finalizedMatches, true);
       const sortLeaderboardStatus = this.service.tiebreaker(leaderboardStatus);
-      return res.status(200).json(sortLeaderboardStatus);
+      return res.status(HTTP_STATUS.SuccessOK).json(sortLeaderboardStatus);
     } catch (error) {
       next(error);
     }
@@ -37,7 +38,7 @@ export default class LeaderboardsController {
         .filter((match) => match.inProgress === false) as unknown as IMatch[];
       const leaderboardStatus = this.service.getAllStatus(teams, finalizedMatches, false);
       const sortLeaderboardStatus = this.service.tiebreaker(leaderboardStatus);
-      return res.status(200).json(sortLeaderboardStatus);
+      return res.status(HTTP_STATUS.SuccessOK).json(sortLeaderboardStatus);
     } catch (error) {
       next(error);
     }
@@ -51,7 +52,7 @@ export default class LeaderboardsController {
         .filter((match) => match.inProgress === false) as unknown as IMatch[];
       const leaderboardStatus = this.service.getLeaderboard(teams, finalizedMatches);
       const sortLeaderboardStatus = this.service.tiebreaker(leaderboardStatus);
-      return res.status(200).json(sortLeaderboardStatus);
+      return res.status(HTTP_STATUS.SuccessOK).json(sortLeaderboardStatus);
     } catch (error) {
       next(error);
     }
