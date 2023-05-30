@@ -21,6 +21,7 @@ export default class MatchesService implements IMatchesService {
   }
 
   async updateProgressMatch(id: number): Promise<string | void> {
+    // documentação do sequelize sobre o metodo update
     // https://medium.com/@sarahdherr/sequelizes-update-method-example-included-39dfed6821d
     await this.model.update(
       { inProgress: false },
@@ -54,27 +55,6 @@ export default class MatchesService implements IMatchesService {
       ],
     });
     return matches;
-  }
-
-  async getMacheByID(id: string | number): Promise<Matche> {
-    const match = await this.model.findAll({
-      where: {
-        id,
-      },
-      include: [
-        {
-          model: Team,
-          as: 'homeTeam',
-          attributes: { exclude: ['id'] },
-        },
-        {
-          model: Team,
-          as: 'awayTeam',
-          attributes: { exclude: ['id'] },
-        },
-      ],
-    });
-    return match[0].dataValues;
   }
 
   async createMatch(dto: IMatch): Promise<Matche | void> {

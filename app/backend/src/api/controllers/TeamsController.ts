@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import ITeamsService from '../services/Interfaces/ITeamsService';
+import HTTP_STATUS from '../shared/htttpStatusCode';
 
 export default class TeamsController {
   protected service: ITeamsService;
@@ -12,7 +13,7 @@ export default class TeamsController {
   Promise<Response | void> {
     try {
       const teams = await this.service.getAllTeams();
-      return res.status(200).json(teams);
+      return res.status(HTTP_STATUS.SuccessOK).json(teams);
     } catch (err) {
       next(err);
     }
@@ -23,7 +24,7 @@ export default class TeamsController {
     try {
       const { id } = req.params;
       const team = await this.service.getTeamById(Number(id));
-      return res.status(200).json(team);
+      return res.status(HTTP_STATUS.SuccessOK).json(team);
     } catch (err) {
       next(err);
     }

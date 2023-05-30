@@ -1,3 +1,4 @@
+import HTTP_STATUS from '../shared/htttpStatusCode';
 import HttpError from './HttpError';
 
 export default class UnprocessableContentError extends HttpError {
@@ -5,7 +6,7 @@ export default class UnprocessableContentError extends HttpError {
 
   public name: string;
 
-  constructor(message: string, httpCode = 422) {
+  constructor(message: string, httpCode = HTTP_STATUS.UnprocessableContentError) {
     super(message);
 
     this.httpCode = httpCode;
