@@ -81,7 +81,7 @@ describe("POST /matches", () => {
     it("deve retornar a nova partida cadastrada com sucesso e enviar status 201", async () => {
       sinon.stub(Model, "create").resolves(NEW_MATCHE_OUTPUT);
       sinon.stub(ValidateMatch.prototype, "checkIfMatchDuplicate").resolves(false)
-      sinon.stub(ValidateMatch.prototype, "checkIfTeamExistsIndB").resolves(false)
+      sinon.stub(ValidateMatch.prototype, "checkIfTeamExistsIndB").resolves(true)
       const { status, body } = await chai.request(app).post('/matches').set({ "Authorization": TOKEN_VALID }).send(NEW_MATCHE_INPUT)
       expect(status).to.equal(HTTP_STATUS.SuccessCreated);
       expect(body).to.deep.equal(NEW_MATCHE_OUTPUT);
@@ -91,7 +91,7 @@ describe("POST /matches", () => {
   describe("em caso de erro", () => {
     it("deve retornar uma mensagem de erro caso tente cadastrar um time competindo com ele mesmo e enviar status 422", async () => {
       sinon.stub(Model, 'findAll').resolves(MATCHES_IN_DB)
-      sinon.stub(ValidateMatch.prototype, "checkIfTeamExistsIndB").resolves(false)
+      sinon.stub(ValidateMatch.prototype, "checkIfTeamExistsIndB").resolves(true)
       sinon.stub(ValidateMatch.prototype, "checkIfMatchDuplicate").resolves(true);
       const { status, body } = await chai.request(app).post('/matches').set({ "Authorization": TOKEN_VALID }).send(TEAM_COMPETING_WITH_ITSELF)
       expect(status).to.equal(HTTP_STATUS.UnprocessableContentError);
@@ -101,7 +101,7 @@ describe("POST /matches", () => {
       sinon.stub(Model, 'findAll').resolves(MATCHES_IN_DB)
       sinon.stub(Model, "create").resolves(NEW_MATCHE_OUTPUT);
       sinon.stub(ValidateMatch.prototype, "checkIfMatchDuplicate").resolves(false);
-      sinon.stub(ValidateMatch.prototype, "checkIfTeamExistsIndB").resolves(true)
+      sinon.stub(ValidateMatch.prototype, "checkIfTeamExistsIndB").resolves(false)
       const { status, body } = await chai.request(app).post('/matches').set({ "Authorization": TOKEN_VALID }).send(NEW_MATCHE_INPUT)
       expect(status).to.equal(HTTP_STATUS.NotFoundError);
       expect(body).to.have.property('message').to.equal("There is no team with such id!")
