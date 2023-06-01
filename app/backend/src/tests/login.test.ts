@@ -3,7 +3,7 @@ import sinon from "sinon"
 import chaihtpp from 'chai-http'
 import { app } from "../app"
 import { Model } from "sequelize"
-import { ONE_VALID_USER_IN_DB, TOKEN_INVALID, TOKEN_VALID, USER_NOT_IN_DB, USER_VALID } from "./mocks/login"
+import { ONE_VALID_USER_IN_DB, TOKEN_INVALID, TOKEN_VALID, USER_EMAIL_REXEG_INVALID, USER_NOT_IN_DB, USER_PASS_LENGTH_PASSWORD_INVALID, USER_VALID } from "./mocks/login"
 import HTTP_STATUS from "../api/shared/htttpStatusCode"
 import AuthService from "../api/services/AuthService"
 import ValidateUser from "../api/middlewares/ValidateUser"
@@ -34,7 +34,17 @@ describe('POST /login', async () => {
       expect(status).to.be.equal(HTTP_STATUS.ClientErrorBadRequest)
       expect(body.message).to.be.equal("Email or password is required")
       expect(badRequest).to.be.true
-    })
+    });
+    it('(validação de Regex) deve retornar uma mensagem de erro caso o email não estiver no formato invalido enviar status 401', async () => {
+      sinon.stub(AuthService.prototype, 'getUserInDb').resolves(ONE_VALID_USER_IN_DB[0]);
+      const { status, unauthorized, body } = await chai.request(app)
+        .post('/login')
+        .send(USER_EMAIL_REXEG_INVALID);
+
+      expect(status).to.equal(HTTP_STATUS.ClientErrorUnauthorized);
+      expect(body.message).to.be.equal("Invalid email or password");
+      expect(unauthorized).to.be.true
+    });
     it('deve retornar uma mensagem de erro caso o campo "password" não for passado e enviar status 400', async () => {
       sinon.stub(Model, 'findAll').resolves(ONE_VALID_USER_IN_DB)
       const { status, badRequest, body } = await chai.request(app).post("/login").send({
@@ -43,7 +53,17 @@ describe('POST /login', async () => {
       expect(status).to.be.equal(HTTP_STATUS.ClientErrorBadRequest)
       expect(body.message).to.be.equal("Email or password is required")
       expect(badRequest).to.be.true
-    })
+    });
+    it('deve retornar uma mensagem de erro caso o "password" tiver menos de 6 caracteres e enviar status 401', async () => {
+      sinon.stub(AuthService.prototype, 'getUserInDb').resolves(ONE_VALID_USER_IN_DB[0]);
+      const { status, unauthorized, body } = await chai.request(app)
+        .post('/login')
+        .send(USER_PASS_LENGTH_PASSWORD_INVALID);
+
+      expect(status).to.equal(HTTP_STATUS.ClientErrorUnauthorized);
+      expect(body.message).to.be.equal("Invalid email or password");
+      expect(unauthorized).to.be.true
+    });
   })
   describe("caso o usuario não esteja cadastrado no banco de dados", () => {
     it('deve retornar uma mensagem de erro e enviar status 401', async () => {

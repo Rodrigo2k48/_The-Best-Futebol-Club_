@@ -22,6 +22,15 @@ export const USER_NOT_IN_DB = {
     password: "eu sou o melhor heroi",
 }
 
+export const USER_PASS_LENGTH_PASSWORD_INVALID = {
+    email: "brucewayne@gmail.com",
+    password: "bruce",
+}
+
+export const USER_EMAIL_REXEG_INVALID = {
+    email: 'brucerobin.com',
+    password: "eu sou o melhor heroi",
+}
 export const mockToken = () => {
 const payload = ONE_VALID_USER_IN_DB[0]
 const expiration = Math.floor(new Date('9999-12-31').getTime() / 1000);
