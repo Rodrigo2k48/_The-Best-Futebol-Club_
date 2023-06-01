@@ -1,58 +1,64 @@
 import chai from "chai";
 import chaiHttp from "chai-http";
-import { app } from "../app"; 
-import Sinon from "sinon"; 
+import { app } from "../app";
+import sinon from "sinon";
 import { Model } from 'sequelize'
-import Team from "../database/models/Team";
-const {expect} = chai
+import { TEAMS_IN_DB } from "./mocks/teams";
+import HTTP_STATUS from "../api/shared/htttpStatusCode";
+
+
+const { expect } = chai
 chai.use(chaiHttp);
 
-describe("Testes na Rota Teams da aplicação", async () => {
-   afterEach(() => {
-    Sinon.restore();
+describe('GET /teams', async () => {
+  afterEach(() => {
+    sinon.restore();
   })
-    it("/teams - GET - deve retornar status 200 e a lista dos times", async () => {
-    // Arrange
-    const teamsMock: Team[] = 
-      [
-        {
-          teamName: 'Real Madri',
-        },
-        {
-          teamName: 'Barcelona',
-        },
-        {
-          teamName: 'Flamengo',
-        },
-        {
-          teamName: 'Fortaleza',
-        },
-        {
-          teamName: 'Vasco',
-        },
-      ] as unknown as Team[]
-    
-      Sinon.stub(Model, 'findAll').resolves(teamsMock)
-    // Action     
-    const response = await chai.request(app).get('/teams')
-    // Assertion
-    expect(response.status).to.equal(200)
-    expect(response.body).to.deep.equal(teamsMock)
-    })
-    it("/teams/:id - GET - deve retornar status 200 e o time no banco de dados referente ao id", async () => {
-      const teamsOutput = [    { id: 99, teamName: "Rodoviaria" },    { id: 36, teamName: "Palmeiras" }  ] as unknown as Team[];
-  
-      Sinon.stub(Model, 'findAll').resolves(teamsOutput);
-      // withArgs é um método do Sinon que permite definir argumentos específicos que devem ser usados em uma chamada de função quando o stub é acionado fonte:https://sinonjs.org/releases/latest/stubs/
-      Sinon.stub(Model, 'findByPk').withArgs(teamsOutput[1].id).resolves(teamsOutput[1]);
-    
-      const response = await chai.request(app).get('/teams/36');
+  describe('em caso de sucesso', () => {
+    it("deve retornar a lista dos times e enviar status 200", async () => {
+      sinon.stub(Model, 'findAll').resolves(TEAMS_IN_DB)  
+      const {status, body, ok} = await chai.request(app).get('/teams')
       
-      expect(response.status).to.equal(200);
-      expect(response.body).to.have.property('id', teamsOutput[1].id);
-      expect(response.body).to.have.property('teamName', teamsOutput[1].teamName);
-      expect(response.body).to.deep.equal(teamsOutput[1])
-      expect(response.body.teamName).to.equal("Palmeiras")
-      expect(response.body).to.not.equal("Rodoviaria")
+      expect(status).to.equal(HTTP_STATUS.SuccessOK)
+      expect(body).to.deep.equal(TEAMS_IN_DB)
+      expect(ok).to.equal(true)
     })
+  })
+  describe('em caso de erro no banco de dados', () => {
+    it("deve retornar um erro e enviar status 500", async () => {
+      sinon.stub(Model, 'findAll').rejects(new Error('Erro no banco de dados'));
+      const {status, body} = await chai.request(app).get('/teams');
+
+      expect(status).to.equal(HTTP_STATUS.InternalServerError);
+      expect(body.message).to.equal('Erro no banco de dados')
+    });
+  });
+})
+
+describe('GET /teams/:id', () => {
+  afterEach(() => {
+    sinon.restore();
+  })
+  describe('em caso de sucesso', () => {
+    it("deve retornar o time no banco de dados referente ao id passado e enviar status 200", async () => {
+      sinon.stub(Model, 'findByPk').resolves(TEAMS_IN_DB[0]);
+  
+      const {status, body, ok} = await chai.request(app).get('/teams/1');
+      
+      expect(status).to.equal(HTTP_STATUS.SuccessOK);
+      expect(body).to.have.property('id').equal(TEAMS_IN_DB[0].id);
+      expect(body).to.have.property('teamName').equal(TEAMS_IN_DB[0].teamName);
+      expect(body).to.deep.equal(TEAMS_IN_DB[0])
+      expect(ok).to.equal(true)
+    })
+  })
+  describe('em caso de erro no banco de dados', () => {
+    it("deve retornar um erro e enviar status 500", async () => {
+      sinon.stub(Model, 'findByPk').throws(new Error('Erro no banco de dados'));
+      const {status, body} = await chai.request(app).get('/teams/1');
+      
+      expect(status).to.equal(HTTP_STATUS.InternalServerError);
+      expect(body.message).to.equal('Erro no banco de dados')
+    });
+  })
 })

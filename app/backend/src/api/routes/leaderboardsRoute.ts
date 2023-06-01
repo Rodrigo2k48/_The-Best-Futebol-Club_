@@ -1,8 +1,8 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import LeaderboardsController from '../Controllers/leaderboardsController';
-import LeaderboardsService from '../Services/leaderboardsService';
-import MatchesService from '../Services/matchesService';
-import TeamsService from '../Services/teamsService';
+import LeaderboardsController from '../controllers/LeaderboardsController';
+import LeaderboardsService from '../services/LeaderboardsService';
+import MatchesService from '../services/MatchesService';
+import TeamsService from '../services/TeamsService';
 
 const leaderboardRoute = Router();
 const teamService = new TeamsService();

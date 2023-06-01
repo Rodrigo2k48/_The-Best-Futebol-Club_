@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import AuthController from '../Controllers/authController';
-import AuthService from '../Services/authService';
-import TokenService from '../shared/tokenService';
+import AuthController from '../controllers/AuthController';
+import AuthService from '../services/AuthService';
+import TokenService from '../services/TokenService';
 
 const authRoute = Router();
 const tokenService = new TokenService();

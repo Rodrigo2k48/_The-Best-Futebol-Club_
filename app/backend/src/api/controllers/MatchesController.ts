@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import IMatch from '../interfaces/IMach';
-import IMatchesService from '../interfaces/IMatchesService';
+import IMatchesService from '../services/Interfaces/IMatchesService';
+import HTTP_STATUS from '../shared/htttpStatusCode';
 
 export default class MatchesController {
   protected service: IMatchesService;
@@ -14,10 +15,10 @@ export default class MatchesController {
     try {
       if (inProgress === 'true' || inProgress === 'false') {
         const matchesProgress = await this.service.getAllByProgress(inProgress);
-        return res.status(200).json(matchesProgress);
+        return res.status(HTTP_STATUS.SuccessOK).json(matchesProgress);
       }
       const allMatches = await this.service.getAllMatches();
-      return res.status(200).json(allMatches);
+      return res.status(HTTP_STATUS.SuccessOK).json(allMatches);
     } catch (error) {
       next(error);
     }
@@ -27,9 +28,8 @@ export default class MatchesController {
   Promise<void | Response> {
     try {
       const { id } = req.params;
-      console.log(id);
       const finishedMatch = await this.service.updateProgressMatch(id);
-      return res.status(200).json({ message: finishedMatch });
+      return res.status(HTTP_STATUS.SuccessOK).json({ message: finishedMatch });
     } catch (error) {
       next(error);
     }
@@ -42,7 +42,7 @@ export default class MatchesController {
       const { homeTeamGoals, awayTeamGoals } = req.body;
       const newMatchGoals = await this.service
         .updateMatchGoalsById(id, homeTeamGoals, awayTeamGoals);
-      return res.status(200).json({ message: newMatchGoals });
+      return res.status(HTTP_STATUS.SuccessOK).json({ message: newMatchGoals });
     } catch (error) {
       next(error);
     }
@@ -54,7 +54,7 @@ export default class MatchesController {
       const { homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals } = req.body as IMatch;
       const payload = { homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals };
       const newMatch = await this.service.createMatch(payload);
-      return res.status(201).json(newMatch);
+      return res.status(HTTP_STATUS.SuccessCreated).json(newMatch);
     } catch (error) {
       next(error);
     }

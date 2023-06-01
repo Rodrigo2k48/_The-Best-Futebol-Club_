@@ -1,7 +1,7 @@
 import * as jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
-import { IJwtService, ITokenUserInfo } from './interfaces/IJwtToken';
-import HttpException from './HttpException';
+import { IJwtService, ITokenUserInfo } from './Interfaces/IJwtToken';
+import Unauthorized from '../erros/Unauthorized';
 
 dotenv.config();
 
@@ -26,8 +26,8 @@ export default class TokenService implements IJwtService {
     try {
       const isValidToken = jwt.verify(token, this._secret, this._config);
       return isValidToken;
-    } catch (err) {
-      throw new HttpException(401, 'Token must be a valid token');
+    } catch (_err) {
+      throw new Unauthorized('Token must be a valid token');
     }
   }
 }

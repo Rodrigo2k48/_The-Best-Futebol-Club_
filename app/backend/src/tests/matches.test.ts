@@ -1,282 +1,199 @@
-import chaiHttp from "chai-http"
-import chai from "chai"
-import Sinon from "sinon"
-import { app } from "../app"
-import Matche from "../database/models/Matche"
-import { Model } from "sequelize"
-import jwt from "jsonwebtoken"
-import TeamsService from "../api/Services/teamsService"
-import ValidateMatch from "../api/middlewares/validateMatch"
-import Team from "../database/models/Team"
+import chaiHttp from "chai-http";
+import chai from "chai";
+import sinon from "sinon";
+import { App, app } from "../app";
+import { Model } from "sequelize";
+import jwt from "jsonwebtoken";
+import TeamsService from "../api/services/TeamsService";
+import ValidateMatch from "../api/middlewares/ValidateMatch";
+import Team from "../database/models/Team";
+import { MATCHES_IN_DB, NEW_MATCHE_INPUT, NEW_MATCHE_OUTPUT, TEAM_COMPETING_WITH_ITSELF } from "./mocks/matches";
+import HTTP_STATUS from "../api/shared/htttpStatusCode";
+import { TOKEN_INVALID, TOKEN_VALID } from "./mocks/login";
+import { TEAMS_IN_DB } from "./mocks/teams";
+import MatchesService from "../api/services/MatchesService";
 
+chai.use(chaiHttp);
+const { expect } = chai;
 
-chai.use(chaiHttp)
-const {expect} = chai
+describe("GET /matches", () => {
+  afterEach(() => {
+    sinon.restore();
+  });
+  describe("em caso de sucesso", () => {
+    it("deve retornar a lista com todos as partidas e enviar status 200", async () => {
+      sinon.stub(Model, "findAll").resolves(MATCHES_IN_DB);
+      const response = await chai.request(app).get("/matches");
 
-describe("testes na rota Matches na aplicação",  async () => {
-    afterEach(() => {
-        Sinon.restore()
+      expect(response.status).to.equal(200);
+      expect(response.body).to.deep.equal(MATCHES_IN_DB);
+    });
+  });
+  describe("em caso de erro", () => {
+    it("deve retornar um erro e enviar status 500", async () => {
+      sinon.stub(Model, "findAll").rejects(new Error("Erro no banco de dados"));
+      const { status, body } = await chai.request(app).get("/matches");
+
+      expect(status).to.equal(HTTP_STATUS.InternalServerError);
+      expect(body.message).to.equal("Erro no banco de dados");
+    });
+  });
+});
+describe("GET /matches?InProgress", () => {
+  afterEach(() => {
+    sinon.restore();
+  });
+  describe("em caso de sucesso", () => {
+    it("deve retornar a lista das partidas que estão em andamento e enviar status 200", async () => {
+      sinon.stub(Model, "findAll").resolves(MATCHES_IN_DB);
+      const { status, body } = await chai
+        .request(app)
+        .get("/matches?inProgress=true");
+
+      expect(status).to.equal(HTTP_STATUS.SuccessOK);
+      expect(body[0]).to.have.property("inProgress").equal(true);
+      expect(body[0]).to.have.property("id").equal(41);
+      expect(body[0])
+        .to.have.property("awayTeam")
+        .property("teamName")
+        .equal("Internacional");
+    });
+    it("deve retornar a lista das partidas que já estão finalizadas e enviar status 200", async () => {
+      sinon.stub(Model, "findAll").resolves(MATCHES_IN_DB);
+      const { status, body } = await chai
+        .request(app)
+        .get("/matches?inProgress=false");
+      expect(status).to.equal(HTTP_STATUS.SuccessOK);
+      expect(body[0]).to.have.property("inProgress").equal(false);
+      expect(body[0]).to.have.property("id").equal(1);
+      expect(body[0])
+        .to.have.property("awayTeam")
+        .property("teamName")
+        .equal("Grêmio");
+    });
+  });
+});
+describe("POST /matches", () => {
+  afterEach(() => {
+    sinon.restore();
+  });
+  describe("em caso de sucesso", () => {
+    it("deve retornar a nova partida cadastrada com sucesso e enviar status 201", async () => {
+      sinon.stub(Model, "create").resolves(NEW_MATCHE_OUTPUT);
+      sinon.stub(ValidateMatch.prototype, "checkIfMatchDuplicate").resolves(false)
+      sinon.stub(ValidateMatch.prototype, "checkIfTeamExistsIndB").resolves(true)
+      const { status, body } = await chai.request(app).post('/matches').set({ "Authorization": TOKEN_VALID }).send(NEW_MATCHE_INPUT)
+      expect(status).to.equal(HTTP_STATUS.SuccessCreated);
+      expect(body).to.deep.equal(NEW_MATCHE_OUTPUT);
     })
-    it("/matches - GET - deve retornar status 200 e a lista de todos os jogos", async () => {
-        const matcheMock = [
-            {
-              "id": 1,
-              "homeTeamId": 16,
-              "homeTeamGoals": 1,
-              "awayTeamId": 8,
-              "awayTeamGoals": 1,
-              "inProgress": false,
-              "homeTeam": {
-                "teamName": "São Paulo"
-              },
-              "awayTeam": {
-                "teamName": "Grêmio"
-              }
-            },
-            {
-              "id": 41,
-              "homeTeamId": 16,
-              "homeTeamGoals": 2,
-              "awayTeamId": 9,
-              "awayTeamGoals": 0,
-              "inProgress": true,
-              "homeTeam": {
-                "teamName": "São Paulo"
-              },
-              "awayTeam": {
-                "teamName": "Internacional"
-              }
-            }
-          ] as unknown as Matche[]
-      
-        Sinon.stub(Model, 'findAll').resolves(matcheMock)
-      const response = await chai.request(app).get('/matches')
-      
-      expect(response.status).to.equal(200)
-      expect(response.body).to.deep.equal(matcheMock)
-    })
-    it("/matches?inProgress - GET - deve retornar status 200 e a lista dos jogos que estão em andamento", async () => {
-      const matcheMock = [
-        {
-          "id": 1,
-          "homeTeamId": 16,
-          "homeTeamGoals": 1,
-          "awayTeamId": 8,
-          "awayTeamGoals": 1,
-          "inProgress": false,
-          "homeTeam": {
-            "teamName": "São Paulo"
-          },
-          "awayTeam": {
-            "teamName": "Grêmio"
-          }
-        },
-        {
-          "id": 41,
-          "homeTeamId": 16,
-          "homeTeamGoals": 2,
-          "awayTeamId": 9,
-          "awayTeamGoals": 0,
-          "inProgress": true,
-          "homeTeam": {
-            "teamName": "São Paulo"
-          },
-          "awayTeam": {
-            "teamName": "Internacional"
-          }
-        }
-      ] as unknown as Matche[]
-      Sinon.stub(Model, 'findAll').resolves(matcheMock)
-      const response = await chai.request(app).get('/matches?inProgress=true')
 
-      expect(response.status).to.equal(200)
-      expect(response.body[0].inProgress).to.equal(true)
-      expect(response.body[0].id).to.equal(41)
-      expect(response.body[0].awayTeam.teamName).to.equal("Internacional")
-    }),
-    it("/matches?inProgress - GET - deve retornar status 200 e a lista dos jogos que já estão finalizados", async () => {
-      const matcheMock = [
-        {
-          "id": 1,
-          "homeTeamId": 16,
-          "homeTeamGoals": 1,
-          "awayTeamId": 8,
-          "awayTeamGoals": 1,
-          "inProgress": false,
-          "homeTeam": {
-            "teamName": "São Paulo"
-          },
-          "awayTeam": {
-            "teamName": "Grêmio"
-          }
-        },
-        {
-          "id": 41,
-          "homeTeamId": 16,
-          "homeTeamGoals": 2,
-          "awayTeamId": 9,
-          "awayTeamGoals": 0,
-          "inProgress": true,
-          "homeTeam": {
-            "teamName": "São Paulo"
-          },
-          "awayTeam": {
-            "teamName": "Internacional"
-          }
-        }
-      ] as unknown as Matche[]
-      Sinon.stub(Model, 'findAll').resolves(matcheMock)
-      const response = await chai.request(app).get('/matches?inProgress=false')
-
-      expect(response.status).to.equal(200)
-      expect(response.body[0].inProgress).to.equal(false)
-      expect(response.body[0].id).to.equal(1)
-      expect(response.body[0].awayTeam.teamName).to.equal("Grêmio")
+  })
+  describe("em caso de erro", () => {
+    it("deve retornar uma mensagem de erro caso tente cadastrar um time competindo com ele mesmo e enviar status 422", async () => {
+      sinon.stub(Model, 'findAll').resolves(MATCHES_IN_DB)
+      sinon.stub(ValidateMatch.prototype, "checkIfTeamExistsIndB").resolves(true)
+      sinon.stub(ValidateMatch.prototype, "checkIfMatchDuplicate").resolves(true);
+      const { status, body } = await chai.request(app).post('/matches').set({ "Authorization": TOKEN_VALID }).send(TEAM_COMPETING_WITH_ITSELF)
+      expect(status).to.equal(HTTP_STATUS.UnprocessableContentError);
+      expect(body).to.have.property('message').to.equal("It is not possible to create a match with two equal teams")
     })
-    it("/matches/id/finish - PATCH - deve retonar status 401 e uma mensagem de erro caso o usuario não estiver com um token", (done) => {
-      chai.request(app)
+    it("deve retornar uma mensagem de erro caso o usuario tente castrar um time que não esteja registrado no banco de dados e enviar status 404", async () => {
+      sinon.stub(Model, 'findAll').resolves(MATCHES_IN_DB)
+      sinon.stub(Model, "create").resolves(NEW_MATCHE_OUTPUT);
+      sinon.stub(ValidateMatch.prototype, "checkIfMatchDuplicate").resolves(false);
+      sinon.stub(ValidateMatch.prototype, "checkIfTeamExistsIndB").resolves(false)
+      const { status, body } = await chai.request(app).post('/matches').set({ "Authorization": TOKEN_VALID }).send(NEW_MATCHE_INPUT)
+      expect(status).to.equal(HTTP_STATUS.NotFoundError);
+      expect(body).to.have.property('message').to.equal("There is no team with such id!")
+    })
+  })
+})
+describe("PATCH /matches/id/finish", () => {
+  afterEach(() => {
+    sinon.restore();
+  });
+  describe("em caso de sucesso", () => {
+    it("deve retornar uma mensagem afirmando a atualização para dar fim da partida e enviar o status 200", async () => {
+      sinon.stub(Model, "update").resolves([1]);
+      const { status, body } = await chai
+        .request(app)
+        .patch("/matches/1/finish")
+        .set({ Authorization: TOKEN_VALID });
+      expect(status).to.equal(HTTP_STATUS.SuccessOK);
+      expect(body).to.have.property("message").equal("Finished");
+    });
+  });
+  describe("em caso de erro", () => {
+    it("deve retornar uma mensagem de erro caso o token estiver invalido e enviar status 401", async () => {
+      const { status, body } = await chai
+        .request(app)
+        .patch("/matches/2/finish")
+        .set({ Authorization: TOKEN_INVALID });
+      expect(status).to.equal(HTTP_STATUS.ClientErrorUnauthorized);
+      expect(body)
+        .to.have.property("message")
+        .equal("Token must be a valid token");
+    });
+    it("deve retonar uma mensagem de erro caso o usuario não estiver com um token e enviar status 401", (done) => {
+      chai
+        .request(app)
         .patch("/matches/1/finish")
         .end((err, res) => {
-          expect(res).to.have.status(401);
-          expect(res.body).to.have.property('message').equal('Token not found');
+          expect(res).to.have.status(HTTP_STATUS.ClientErrorUnauthorized);
+          expect(res.body).to.have.property("message").equal("Token not found");
           done();
         });
+    });
+  });
+  describe("em caso de erro no banco de dados", () => {
+    it("deve retornar um erro e enviar status 500", async () => {
+      sinon.stub(Model, "update").rejects(new Error("Erro no banco de dados"))
+      const { status, body } = await chai.request(app).patch("/matches/id/finish").set({"Authorization": TOKEN_VALID})
+      expect(status).to.equal(HTTP_STATUS.InternalServerError);
+      expect(body.message).to.equal("Erro no banco de dados");
     })
-    it("/matches/id/finish - PATCH - deve retonar status 401 e uma mensagem de erro caso o usuario estiver com um token invalido", async () => {
-        const tokenInvalid = "eyJhbGciOiJIUzI1iIsnR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6InVzZXIiLCJpYXQiOjE2NzgxMjkyNzYsImV4cCI6MTcyMTMyOTI3Nn0.lIiw4TS_EoQUAgQ1acKCoWVGuBx0PZ6YnCSrMnPYhsw"
-        const response = await chai.request(app).patch("/matches/2/finish").set({ 'Authorization': tokenInvalid });
-        expect(response.status).to.be.equal(401)  
-        expect(response.body).to.deep.equal({
-          "message": "Token must be a valid token"
-        })
-        expect(response.body).to.have.property('message')
+  }) 
+});
+describe("PATCH /matches/id", () => {
+  afterEach(() => {
+    sinon.restore();
+  });
+  describe("em caso de sucesso", () => {
+    it("deve retornar uma mensagem afirmando a atualização dos goals da partida e enviar status 200", async () => {
+      sinon.stub(Model, "update").resolves([1]);
+      const { status, body } = await chai.request(app).patch('/matches/1').set({ "Authorization": TOKEN_VALID })
+      expect(status).to.equal(HTTP_STATUS.SuccessOK);
+      expect(body).to.have.property("message").equal("Goals updated successfully");
     })
-    it("/matches/id/finish - PATCH - caso o usuario esteja com um token valido, deve retornar status 200 e caso exista a partida passada por parametro da requisição via ID, uma mensagem afirmando a atualização da partida deve ser passada para o usuario", async () => {
-      const tokenValid = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc4NzM1NzQ2LCJleHAiOjE3MjE5MzU3NDZ9.2En2VOz8pkAFMyyQp6ryyrXJejfmW08mYK-20Eh-Ffo"
-      Sinon.stub(jwt, 'verify').callsFake(() => Promise.resolve({ success: 'Token is valid' }))
-      Sinon.stub(Model, 'update').resolves([1])
-      const response = await chai.request(app).patch('/matches/1/finish')
-      .set({Authorization: tokenValid});
-      expect (response.status).to.be.equal(200);
-      expect (response.body).to.be.deep.equal({ message: 'Finished' })
-    })
-    it("/matches/id - PATCH - deve retonar status 401 e uma mensagem de erro caso o usuario não estiver com um token", (done) => {
-      chai.request(app)
+  })
+  describe("em caso de erro", () => {
+    it("deve retornar uma mensagem de erro caso o token estiver invalido e enviar status 401", async () => {
+      const { status, body } = await chai
+        .request(app)
+        .patch("/matches/2")
+        .set({ Authorization: TOKEN_INVALID });
+      expect(status).to.equal(HTTP_STATUS.ClientErrorUnauthorized);
+      expect(body)
+        .to.have.property("message")
+        .equal("Token must be a valid token");
+    });
+    it("deve retonar uma mensagem de erro caso o usuario não estiver com um token e enviar status 401", (done) => {
+      chai
+        .request(app)
         .patch("/matches/1")
         .end((err, res) => {
-          expect(res).to.have.status(401);
-          expect(res.body).to.have.property('message').equal('Token not found');
+          expect(res).to.have.status(HTTP_STATUS.ClientErrorUnauthorized);
+          expect(res.body).to.have.property("message").equal("Token not found");
           done();
         });
+    });
+  });
+  describe("em caso de erro no banco de dados", () => {
+    it("deve retornar um erro e enviar status 500", async () => {
+      sinon.stub(Model, "update").rejects(new Error("Erro no banco de dados"));
+      const {status, body} = await chai.request(app).patch('/matches/1').set({ "Authorization": TOKEN_VALID })
+      expect(status).to.equal(HTTP_STATUS.InternalServerError);
+      expect(body.message).to.equal('Erro no banco de dados')
     })
-    it("/matches/id - PATCH - deve retonar status 401 e uma mensagem de erro caso o usuario estiver com um token invalido", async () => {
-        const tokenInvalid = "eyJhbGciOiJIUzI1iIsnR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6InVzZXIiLCJpYXQiOjE2NzgxMjkyNzYsImV4cCI6MTcyMTMyOTI3Nn0.lIiw4TS_EoQUAgQ1acKCoWVGuBx0PZ6YnCSrMnPYhsw"
-        const response = await chai.request(app).patch("/matches/2").set({ 'Authorization': tokenInvalid });
-        expect(response.status).to.be.equal(401)  
-        expect(response.body).to.deep.equal({
-          "message": "Token must be a valid token"
-        })
-        expect(response.body).to.have.property('message')
-    })
-    it("/matches/id - PATCH - deve retornar status 200 e caso exista a partida passado por parametro da requisição via ID, uma mensagem arfimando a atualização dos goals da partidas deve ser passada para o usuario", async () => {
-      const tokenValid = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc4NzM1NzQ2LCJleHAiOjE3MjE5MzU3NDZ9.2En2VOz8pkAFMyyQp6ryyrXJejfmW08mYK-20Eh-Ffo"
-      Sinon.stub(jwt, 'verify').callsFake(() => Promise.resolve({ success: 'Token is valid' }))
-      Sinon.stub(Model, 'update').resolves([1])
-      const response = await chai.request(app).patch('/matches/1')
-      .set({Authorization: tokenValid});
-      expect (response.status).to.be.equal(200);
-      expect (response.body).to.be.deep.equal({ message: 'Goals updated successfully' })
-    })
-    it("/matches - POST - deve retornar status 401 e uma mensagem de erro caso o usuario não estiver com um token", (done) => {
-      chai.request(app)
-      .post("/matches")
-      .end((err, res) => {
-        expect(res).to.have.status(401);
-        expect(res.body).to.have.property('message').equal('Token not found');
-        done();
-      });
-    })
-    it("/matches - POST - deve retornar status 401 e uma mensagem de erro caso o usuario estiver com um token invalido", async () => {
-      const tokenInvalid = "eyJhbGciOiJIUzI1iIsnR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6InVzZXIiLCJpYXQiOjE2NzgxMjkyNzYsImV4cCI6MTcyMTMyOTI3Nn0.lIiw4TS_EoQUAgQ1acKCoWVGuBx0PZ6YnCSrMnPYhsw"
-      const response = await chai.request(app).post("/matches").set({ 'Authorization': tokenInvalid });
-      expect(response.status).to.be.equal(401)  
-      expect(response.body).to.deep.equal({
-        "message": "Token must be a valid token"
-      })
-      expect(response.body).to.have.property('message')
-    })
-    it("/matches - POST - deve retornar status 201 e caso não exista a partida registada no banco de dados, deve retornar a partida cadastrada com sucesso", async () => {
-      const tokenValid = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc4NzM1NzQ2LCJleHAiOjE3MjE5MzU3NDZ9.2En2VOz8pkAFMyyQp6ryyrXJejfmW08mYK-20Eh-Ffo"
-      const outputMock = {
-      "id": 2,
-      "homeTeamId": 16,
-      "homeTeamGoals": 2,
-      "awayTeamId": 8,
-      "awayTeamGoals": 2,
-      "inProgress": true, 
-      }
-      Sinon.stub(Model, 'create').resolves(outputMock as unknown as Matche)
-      Sinon.stub(ValidateMatch.prototype, "checkIfMatchDuplicate").resolves(false)
-      Sinon.stub(ValidateMatch.prototype, "checkIfTeamExistsIndB").resolves(true)
-      const newMatcheMock = {
-        "homeTeamId": 14,
-        "awayTeamId": 8, 
-        "homeTeamGoals": 2,
-        "awayTeamGoals": 2,
-      }
-      const response = await chai.request(app).post("/matches").set({'Authorization': tokenValid}).send(newMatcheMock)
-      expect(response.status).to.equal(201)
-      expect(response.body).to.deep.equal(outputMock as unknown as Matche)
-    })
-    it("/matches - POST - deve retornar status 422 e uma mensagem de erro caso o usuario tente cadastrar um time competindo com ele mesmo no banco de dados", async () => {
-      const tokenValid = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc4NzM1NzQ2LCJleHAiOjE3MjE5MzU3NDZ9.2En2VOz8pkAFMyyQp6ryyrXJejfmW08mYK-20Eh-Ffo"
-      const teamsOutput = [    { id: 99, teamName: "Rodoviaria" },    { id: 36, teamName: "Palmeiras" }  ] as unknown as Team[];
-    
-        Sinon.stub(Model, 'findAll').resolves(teamsOutput);
-      const outputMock = {
-      "id": 40,
-      "homeTeamId": 36,
-      "homeTeamGoals": 2,
-      "awayTeamId": 36,
-      "awayTeamGoals": 2,
-      "inProgress": true, 
-    }
-      const newMatcheMock = {
-        "homeTeamId": 36,
-        "awayTeamId": 36, 
-        "homeTeamGoals": 2,
-        "awayTeamGoals": 2,
-      }
-      Sinon.stub(ValidateMatch.prototype, "checkIfMatchDuplicate").resolves(true)
-      Sinon.stub(Model, 'create').resolves(outputMock as unknown as Matche)
-      const response = await chai.request(app).post("/matches").set({'Authorization': tokenValid}).send(newMatcheMock)
-      expect(response.status).to.equal(422)
-      expect(response.body).to.deep.equal({message: "It is not possible to create a match with two equal teams"})
-    })
-    it("/matches - POST - deve retornar status 404 e uma mensagem de erro caso o usuario tente cadastrar um time que não consta registrado no banco de dados", async () => {
-      const tokenValid = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc4NzM1NzQ2LCJleHAiOjE3MjE5MzU3NDZ9.2En2VOz8pkAFMyyQp6ryyrXJejfmW08mYK-20Eh-Ffo"
-      const teamsOutput = [    { id: 99, teamName: "Rodoviaria" },    { id: 36, teamName: "Palmeiras" }  ] as unknown as Team[];
-    
-        Sinon.stub(Model, 'findAll').resolves(teamsOutput);
-      const outputMock = {
-      "id": 40,
-      "homeTeamId": 36,
-      "homeTeamGoals": 2,
-      "awayTeamId": 36,
-      "awayTeamGoals": 2,
-      "inProgress": true, 
-    }
-      const newMatcheMock = {
-        "homeTeamId": 336,
-        "awayTeamId": 36, 
-        "homeTeamGoals": 2,
-        "awayTeamGoals": 2,
-      }
-      Sinon.stub(ValidateMatch.prototype, "checkIfMatchDuplicate").resolves(false)
-      Sinon.stub(ValidateMatch.prototype, "checkIfTeamExistsIndB").resolves(false)
-      Sinon.stub(Model, 'create').resolves(outputMock as unknown as Matche)
-      const response = await chai.request(app).post("/matches").set({'Authorization': tokenValid}).send(newMatcheMock)
-      expect(response.status).to.equal(404)
-      expect(response.body).to.deep.equal({ message:"There is no team with such id!"})
-    })
+  })
 })

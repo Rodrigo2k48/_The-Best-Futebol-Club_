@@ -1,6 +1,6 @@
-import ILeaderboard from './ILeaderboard';
-import IMatch from './IMach';
-import ITeam from './ITeam';
+import ILeaderboard from '../../interfaces/ILeaderboard';
+import IMatch from '../../interfaces/IMach';
+import ITeam from '../../interfaces/ITeam';
 
 export default interface ILeaderboardService {
   timesPlaying(id: number, matches: IMatch[]): number;
