@@ -1,17 +1,12 @@
 import chaiHttp from "chai-http";
 import chai from "chai";
 import sinon from "sinon";
-import { App, app } from "../app";
+import { app } from "../app";
 import { Model } from "sequelize";
-import jwt from "jsonwebtoken";
-import TeamsService from "../api/services/TeamsService";
 import ValidateMatch from "../api/middlewares/ValidateMatch";
-import Team from "../database/models/Team";
 import { MATCHES_IN_DB, NEW_MATCHE_INPUT, NEW_MATCHE_OUTPUT, TEAM_COMPETING_WITH_ITSELF } from "./mocks/matches";
 import HTTP_STATUS from "../api/shared/htttpStatusCode";
 import { TOKEN_INVALID, TOKEN_VALID } from "./mocks/login";
-import { TEAMS_IN_DB } from "./mocks/teams";
-import MatchesService from "../api/services/MatchesService";
 
 chai.use(chaiHttp);
 const { expect } = chai;
@@ -86,7 +81,6 @@ describe("POST /matches", () => {
       expect(status).to.equal(HTTP_STATUS.SuccessCreated);
       expect(body).to.deep.equal(NEW_MATCHE_OUTPUT);
     })
-
   })
   describe("em caso de erro", () => {
     it("deve retornar uma mensagem de erro caso tente cadastrar um time competindo com ele mesmo e enviar status 422", async () => {
