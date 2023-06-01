@@ -2,12 +2,9 @@ import express from 'express';
 import authRoute from './api/routes/authRoute';
 import teamsRoute from './api/routes/teamsRoute';
 import HttpErrorMiddleware from './api/middlewares/HttpErrorMiddleware';
-
-import matchesRoute from './api/routers/matchesRoute';
-import leaderboardRoute from './api/routers/leaderboardsRoute';
+import matchesRoute from '../src/api/routes/matchesRoute';
+import leaderboardRoute from '../src/api/routes/leaderboardsRoute';
 import 'dotenv/config';
-import matchesRoute from './api/routes/matchesRoute';
-import leaderboardRoute from './api/routes/leaderboardsRoute';
 const PORT = process.env.APP_PORT || 3001;
 
 class App {
