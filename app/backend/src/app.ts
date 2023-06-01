@@ -2,8 +2,13 @@ import express from 'express';
 import authRoute from './api/routes/authRoute';
 import teamsRoute from './api/routes/teamsRoute';
 import HttpErrorMiddleware from './api/middlewares/HttpErrorMiddleware';
+
+import matchesRoute from './api/routers/matchesRoute';
+import leaderboardRoute from './api/routers/leaderboardsRoute';
+import 'dotenv/config';
 import matchesRoute from './api/routes/matchesRoute';
 import leaderboardRoute from './api/routes/leaderboardsRoute';
+const PORT = process.env.APP_PORT || 3001;
 
 class App {
   public app: express.Express;
@@ -13,6 +18,10 @@ class App {
     this.config();
     this.initRoutes();
     this.errorHandler();
+    
+    // Não remover essa rota
+    this.app.listen(PORT, () => console.log(`Running on port ${PORT}`));
+    this.app.get('/', (req, res) => res.send('Test route'));
   }
 
   private config():void {
@@ -36,10 +45,6 @@ class App {
 
   private errorHandler(): void {
     this.app.use(HttpErrorMiddleware.error);
-  }
-
-  public start(PORT: string | number):void {
-    this.app.listen(PORT, () => console.log(`Running on port ${PORT}`));
   }
 }
 
