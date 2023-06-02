@@ -1,4 +1,4 @@
-import User from "../../database/models/User";
+import User from "../../../database/models/User";
 import * as jwt from "jsonwebtoken";
 import * as dotenv from 'dotenv';
 

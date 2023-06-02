@@ -1,4 +1,4 @@
-import Matche from "../../database/models/Matche";
+import Matche from "../../../database/models/Matche";
 
 export const MATCHES_IN_DB = [
                 {
@@ -55,7 +55,7 @@ export const TEAM_COMPETING_WITH_ITSELF = {
   "awayTeamGoals": 2,
 }
 
-
+export const POSITION_NOT_EXIST_IN_ARRAY = 1000
 
 
 

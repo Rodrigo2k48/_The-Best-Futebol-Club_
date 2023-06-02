@@ -1,10 +1,10 @@
 import chai from "chai";
 import chaiHttp from "chai-http";
-import { app } from "../app";
+import { app } from "../../app";
 import sinon from "sinon";
 import { Model } from 'sequelize'
-import { TEAMS_IN_DB } from "./mocks/teams";
-import HTTP_STATUS from "../api/shared/htttpStatusCode";
+import { TEAMS_IN_DB } from "../integration/mocks/teams";
+import HTTP_STATUS from "../../api/shared/htttpStatusCode";
 
 
 const { expect } = chai

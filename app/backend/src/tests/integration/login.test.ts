@@ -1,12 +1,12 @@
 import chai from "chai"
 import sinon from "sinon"
 import chaihtpp from 'chai-http'
-import { app } from "../app"
+import { app } from "../../app"
 import { Model } from "sequelize"
-import { ONE_VALID_USER_IN_DB, TOKEN_INVALID, TOKEN_VALID, USER_EMAIL_REXEG_INVALID, USER_NOT_IN_DB, USER_PASS_LENGTH_PASSWORD_INVALID, USER_VALID } from "./mocks/login"
-import HTTP_STATUS from "../api/shared/htttpStatusCode"
-import AuthService from "../api/services/AuthService"
-import ValidateUser from "../api/middlewares/ValidateUser"
+import { ONE_VALID_USER_IN_DB, TOKEN_INVALID, TOKEN_VALID, USER_EMAIL_REXEG_INVALID, USER_NOT_IN_DB, USER_PASS_LENGTH_PASSWORD_INVALID, USER_VALID } from "../integration/mocks/login"
+import HTTP_STATUS from "../../api/shared/htttpStatusCode"
+import AuthService from "../../api/services/AuthService"
+import ValidateUser from "../../api/middlewares/ValidateUser"
 
 chai.use(chaihtpp)
 const { expect } = chai

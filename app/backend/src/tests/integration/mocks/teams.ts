@@ -1,4 +1,4 @@
-import Team from "../../database/models/Team";
+import Team from "../../../database/models/Team";
 
 export const TEAMS_IN_DB: Team[] =
         [

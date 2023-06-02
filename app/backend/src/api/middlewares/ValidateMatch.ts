@@ -12,7 +12,7 @@ export default class ValidateMatch {
   public async checkIfMatchDuplicate(): Promise<boolean> {
     const homeTeam = await new TeamsService().getTeamById(this._homeTeamId);
     const awayTeam = await new TeamsService().getTeamById(this._awayTeamId);
-    if (homeTeam?.dataValues.teamName === awayTeam?.dataValues.teamName) {
+    if (homeTeam && awayTeam && homeTeam.dataValues.teamName === awayTeam.dataValues.teamName) {
       return true;
     }
     return false;

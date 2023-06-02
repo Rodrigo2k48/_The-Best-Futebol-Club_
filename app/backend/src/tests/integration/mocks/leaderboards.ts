@@ -1,5 +1,5 @@
-import Team from "../../database/models/Team"
-import Matche from "../../database/models/Matche"
+import Team from "../../../database/models/Team"
+import Matche from "../../../database/models/Matche"
 
 export const TEAMS_LEADERBOARD = [
 {

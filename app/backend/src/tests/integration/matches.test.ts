@@ -1,12 +1,16 @@
 import chaiHttp from "chai-http";
 import chai from "chai";
 import sinon from "sinon";
-import { app } from "../app";
+import { app } from "../../app";
 import { Model } from "sequelize";
-import ValidateMatch from "../api/middlewares/ValidateMatch";
-import { MATCHES_IN_DB, NEW_MATCHE_INPUT, NEW_MATCHE_OUTPUT, TEAM_COMPETING_WITH_ITSELF } from "./mocks/matches";
-import HTTP_STATUS from "../api/shared/htttpStatusCode";
-import { TOKEN_INVALID, TOKEN_VALID } from "./mocks/login";
+import ValidateMatch from "../../api/middlewares/ValidateMatch";
+import { MATCHES_IN_DB, NEW_MATCHE_INPUT, NEW_MATCHE_OUTPUT, POSITION_NOT_EXIST_IN_ARRAY, TEAM_COMPETING_WITH_ITSELF } from "../integration/mocks/matches";
+import HTTP_STATUS from "../../api/shared/htttpStatusCode";
+import { TOKEN_INVALID, TOKEN_VALID } from "../integration/mocks/login";
+import { TEAMS_IN_DB } from "../integration/mocks/teams";
+import TeamsService from "../../api/services/TeamsService";
+import Team from "../../database/models/Team";
+import MatchesService from "../../api/services/MatchesService";
 
 chai.use(chaiHttp);
 const { expect } = chai;
@@ -80,7 +84,7 @@ describe("POST /matches", () => {
       const { status, body } = await chai.request(app).post('/matches').set({ "Authorization": TOKEN_VALID }).send(NEW_MATCHE_INPUT)
       expect(status).to.equal(HTTP_STATUS.SuccessCreated);
       expect(body).to.deep.equal(NEW_MATCHE_OUTPUT);
-    })
+    });
   })
   describe("em caso de erro", () => {
     it("deve retornar uma mensagem de erro caso tente cadastrar um time competindo com ele mesmo e enviar status 422", async () => {
@@ -142,11 +146,11 @@ describe("PATCH /matches/id/finish", () => {
   describe("em caso de erro no banco de dados", () => {
     it("deve retornar um erro e enviar status 500", async () => {
       sinon.stub(Model, "update").rejects(new Error("Erro no banco de dados"))
-      const { status, body } = await chai.request(app).patch("/matches/id/finish").set({"Authorization": TOKEN_VALID})
+      const { status, body } = await chai.request(app).patch("/matches/id/finish").set({ "Authorization": TOKEN_VALID })
       expect(status).to.equal(HTTP_STATUS.InternalServerError);
       expect(body.message).to.equal("Erro no banco de dados");
     })
-  }) 
+  })
 });
 describe("PATCH /matches/id", () => {
   afterEach(() => {
@@ -185,7 +189,7 @@ describe("PATCH /matches/id", () => {
   describe("em caso de erro no banco de dados", () => {
     it("deve retornar um erro e enviar status 500", async () => {
       sinon.stub(Model, "update").rejects(new Error("Erro no banco de dados"));
-      const {status, body} = await chai.request(app).patch('/matches/1').set({ "Authorization": TOKEN_VALID })
+      const { status, body } = await chai.request(app).patch('/matches/1').set({ "Authorization": TOKEN_VALID })
       expect(status).to.equal(HTTP_STATUS.InternalServerError);
       expect(body.message).to.equal('Erro no banco de dados')
     })
