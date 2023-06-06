@@ -1,10 +1,10 @@
-import express from "express";
-import authRoute from "./api/routes/authRoute";
-import teamsRoute from "./api/routes/teamsRoute";
-import HttpErrorMiddleware from "./api/middlewares/HttpErrorMiddleware";
-import matchesRoute from "./api/routes/matchesRoute";
-import leaderboardRoute from "./api/routes/leaderboardsRoute";
-import "dotenv/config";
+import express from 'express';
+import authRoute from './api/routes/authRoute';
+import teamsRoute from './api/routes/teamsRoute';
+import HttpErrorMiddleware from './api/middlewares/HttpErrorMiddleware';
+import matchesRoute from './api/routes/matchesRoute';
+import leaderboardRoute from './api/routes/leaderboardsRoute';
+import 'dotenv/config';
 
 class App {
   public app: express.Express;
@@ -18,18 +18,14 @@ class App {
     this.start(this.PORT);
 
     // Não remover essa rota
-
-    this.app.get("/", (req, res) => res.send("Test route"));
+    this.app.get('/', (req, res) => res.send('Test route'));
   }
 
   private config(): void {
     const accessControl: express.RequestHandler = (_req, res, next) => {
-      res.header("Access-Control-Allow-Origin", "*");
-      res.header(
-        "Access-Control-Allow-Methods",
-        "GET,POST,DELETE,OPTIONS,PUT,PATCH"
-      );
-      res.header("Access-Control-Allow-Headers", "*");
+      res.header('Access-Control-Allow-Origin', '*');
+      res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS,PUT,PATCH');
+      res.header('Access-Control-Allow-Headers', '*');
       next();
     };
 
@@ -38,10 +34,10 @@ class App {
   }
 
   private initRoutes(): void {
-    this.app.use("/teams", teamsRoute);
-    this.app.use("/login", authRoute);
-    this.app.use("/matches", matchesRoute);
-    this.app.use("/leaderboard", leaderboardRoute);
+    this.app.use('/teams', teamsRoute);
+    this.app.use('/login', authRoute);
+    this.app.use('/matches', matchesRoute);
+    this.app.use('/leaderboard', leaderboardRoute);
   }
 
   private errorHandler(): void {
