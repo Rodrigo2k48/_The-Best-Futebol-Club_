@@ -9,8 +9,7 @@ export default class TeamsController {
     this.service = service;
   }
 
-  public async readAllTeams(req: Request, res: Response, next: NextFunction):
-  Promise<Response | void> {
+  public async readAllTeams(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       const teams = await this.service.getAllTeams();
       return res.status(HTTP_STATUS.SuccessOK).json(teams);
@@ -19,8 +18,7 @@ export default class TeamsController {
     }
   }
 
-  public async readTeamById(req: Request, res: Response, next: NextFunction):
-  Promise<Response | void> {
+  public async readTeamById(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       const { id } = req.params;
       const team = await this.service.getTeamById(Number(id));

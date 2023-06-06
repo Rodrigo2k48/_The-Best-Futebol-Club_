@@ -23,19 +23,12 @@ export default class MatchesService implements IMatchesService {
   async updateProgressMatch(id: number): Promise<string | void> {
     // documentação do sequelize sobre o metodo update
     // https://medium.com/@sarahdherr/sequelizes-update-method-example-included-39dfed6821d
-    await this.model.update(
-      { inProgress: false },
-      { where: { id } },
-    );
+    await this.model.update({ inProgress: false }, { where: { id } });
     return 'Finished';
   }
 
-  async updateMatchGoalsById(id: string, homeTeamGoals: number, awayTeamGoals: number):
-    Promise<string> {
-    await this.model.update(
-      { homeTeamGoals, awayTeamGoals },
-      { where: { id } },
-    );
+  async updateMatchGoalsById(id: string, homeTeamGoals: number, awayTeamGoals: number): Promise<string> {
+    await this.model.update({ homeTeamGoals, awayTeamGoals }, { where: { id } });
     return 'Goals updated successfully';
   }
 
@@ -58,8 +51,7 @@ export default class MatchesService implements IMatchesService {
   }
 
   async createMatch(dto: IMatch): Promise<Matche | void> {
-    const { homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals,
-    } = dto;
+    const { homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals } = dto;
     const validateMatch = new ValidateMatch(homeTeamId, awayTeamId);
     const validateDuplicate = await validateMatch.checkIfMatchDuplicate();
     const validateExists = await validateMatch.checkIfTeamExistsIndB();

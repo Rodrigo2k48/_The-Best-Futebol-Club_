@@ -4,7 +4,7 @@ enum HTTP_STATUS {
   ClientErrorBadRequest = 400,
   ClientErrorUnauthorized = 401,
   UnprocessableContentError = 422,
-  InternalServerError = 500, 
+  InternalServerError = 500,
   NotFoundError = 404,
 }
 

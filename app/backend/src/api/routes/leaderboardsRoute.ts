@@ -11,18 +11,16 @@ const leaderboardService = new LeaderboardsService();
 const leaderboardController = new LeaderboardsController(
   leaderboardService,
   teamService,
-
-  matcheService,
+  matcheService
 );
 
-leaderboardRoute.get('/home', (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => leaderboardController.homeLeaderboard(req, res, next));
+leaderboardRoute.get('/home', (req: Request, res: Response, next: NextFunction) =>
+  leaderboardController.homeLeaderboard(req, res, next)
+);
 
 leaderboardRoute.get('/away', (req: Request, res: Response, next: NextFunction) =>
-  leaderboardController.awayLeaderboard(req, res, next));
+  leaderboardController.awayLeaderboard(req, res, next)
+);
 leaderboardRoute.get('/', (req: Request, res: Response, next: NextFunction) => {
   leaderboardController.leaderboard(req, res, next);
 });

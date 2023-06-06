@@ -8,9 +8,7 @@ const tokenService = new TokenService();
 const authService = new AuthService(tokenService);
 const authController = new AuthController(authService);
 
-authRoute.post('/', (req: Request, res: Response, next: NextFunction) => authController
-  . login(req, res, next));
-authRoute.get('/role', (req: Request, res: Response, next: NextFunction) => authController
-  . validate(req, res, next));
+authRoute.post('/', (req: Request, res: Response, next: NextFunction) => authController.login(req, res, next));
+authRoute.get('/role', (req: Request, res: Response, next: NextFunction) => authController.validate(req, res, next));
 
 export default authRoute;

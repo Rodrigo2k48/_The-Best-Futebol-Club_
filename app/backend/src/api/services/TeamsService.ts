@@ -5,7 +5,7 @@ import ITeamsService from './Interfaces/ITeamsService';
 export default class TeamsService implements ITeamsService {
   protected model: ModelStatic<Team> = Team;
 
-  public async getAllTeams():Promise<Team[]> {
+  public async getAllTeams(): Promise<Team[]> {
     return this.model.findAll();
   }
 

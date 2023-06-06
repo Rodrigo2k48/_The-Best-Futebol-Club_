@@ -6,7 +6,7 @@ import HTTP_STATUS from '../../api/shared/htttpStatusCode';
 
 chai.use(chaiHttp);
 // caso a porta já esteja em uso, sinta-se a vontade para modificar aqui caso o teste falhar
-const PORT = 3000
+const PORT = 3030
 
 describe('App (Servidor/Express)', function () {
   let server: any;

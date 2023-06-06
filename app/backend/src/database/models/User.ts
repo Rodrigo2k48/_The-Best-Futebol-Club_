@@ -9,34 +9,37 @@ class User extends Model {
   declare password: string;
 }
 
-User.init({
-  id: {
-    type: INTEGER,
-    allowNull: false,
-    autoIncrement: true,
-    primaryKey: true,
+User.init(
+  {
+    id: {
+      type: INTEGER,
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    username: {
+      type: STRING,
+      allowNull: false,
+    },
+    role: {
+      type: STRING,
+    },
+    email: {
+      type: STRING,
+      allowNull: false,
+      unique: true,
+    },
+    password: {
+      type: STRING,
+      allowNull: false,
+    },
   },
-  username: {
-    type: STRING,
-    allowNull: false,
-  },
-  role: {
-    type: STRING,
-  },
-  email: {
-    type: STRING,
-    allowNull: false,
-    unique: true,
-  },
-  password: {
-    type: STRING,
-    allowNull: false,
-  },
-}, {
-  underscored: true,
-  sequelize: db,
-  tableName: 'users',
-  timestamps: false,
-});
+  {
+    underscored: true,
+    sequelize: db,
+    tableName: 'users',
+    timestamps: false,
+  }
+);
 
 export default User;

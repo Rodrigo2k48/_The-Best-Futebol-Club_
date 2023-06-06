@@ -29,8 +29,7 @@ export default class ValidateUser {
     return isPassValid;
   };
 
-  public async validateUser(emailInDb: string, passHashInDb: string):
-  Promise<boolean> {
+  public async validateUser(emailInDb: string, passHashInDb: string): Promise<boolean> {
     const isUserValid = await this.validateEmail(emailInDb);
     const isPassValid = await this.validatePassword(passHashInDb);
     if (!isUserValid || !isPassValid) {

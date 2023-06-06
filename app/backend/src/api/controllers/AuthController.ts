@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
 import BadRequest from '../erros/BadRequest';
 import IAuthService from '../services/Interfaces/IAuthService';
-import IUser from '../interfaces/IUser';
 import Unauthorized from '../erros/Unauthorized';
 import HTTP_STATUS from '../shared/htttpStatusCode';
 
@@ -12,8 +11,7 @@ export default class AuthController {
     this.service = service;
   }
 
-  public async login(req: Request, res: Response, next: NextFunction):
-  Promise<Response | void> {
+  public async login(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       const { email, password } = req.body;
       if (!email || !password) {
@@ -33,9 +31,9 @@ export default class AuthController {
       if (!authorization) {
         throw new Unauthorized('Token not found');
       }
-        const isTokenValid = this.service.authToken(authorization as string);
-        const { role } = isTokenValid as JwtPayload;
-        return res.status(HTTP_STATUS.SuccessOK).json({ role });
+      const token = this.service.authToken(authorization as string);
+      const { role } = token as JwtPayload;
+      return res.status(HTTP_STATUS.SuccessOK).json({ role });
     } catch (error) {
       next(error);
     }

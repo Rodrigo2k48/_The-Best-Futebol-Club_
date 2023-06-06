@@ -13,5 +13,5 @@ export default interface ILeaderboardService {
   totalPoints(id: number, matches: IMatch[]): number;
   tiebreaker(leaderboard: ILeaderboard[]): ILeaderboard[];
   getAllStatus(teams: ITeam[], matches: IMatch[], isHome: boolean): ILeaderboard[];
-  getLeaderboard(teams: ITeam[], matches: IMatch[]): ILeaderboard[]
+  getLeaderboard(teams: ITeam[], matches: IMatch[]): ILeaderboard[];
 }

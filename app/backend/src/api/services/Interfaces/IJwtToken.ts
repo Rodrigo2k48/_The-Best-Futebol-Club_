@@ -6,7 +6,7 @@ interface ITokenUserInfo {
 }
 
 interface IJwtService {
-  create(dto: ITokenUserInfo): string
-  validate(token: string): JwtPayload | string
+  create(dto: ITokenUserInfo): string;
+  validate(token: string): JwtPayload | string;
 }
 export { IJwtService, ITokenUserInfo };

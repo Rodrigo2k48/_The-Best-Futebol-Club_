@@ -9,8 +9,7 @@ export default class MatchesController {
     this.service = service;
   }
 
-  public async readAllMatches(req: Request, res: Response, next: NextFunction):
-  Promise<void | Response> {
+  public async readAllMatches(req: Request, res: Response, next: NextFunction): Promise<void | Response> {
     const { inProgress } = req.query;
     try {
       if (inProgress === 'true' || inProgress === 'false') {
@@ -24,8 +23,7 @@ export default class MatchesController {
     }
   }
 
-  public async matcheFinisher(req: Request, res: Response, next: NextFunction):
-  Promise<void | Response> {
+  public async matcheFinisher(req: Request, res: Response, next: NextFunction): Promise<void | Response> {
     try {
       const { id } = req.params;
       const finishedMatch = await this.service.updateProgressMatch(id);
@@ -35,21 +33,18 @@ export default class MatchesController {
     }
   }
 
-  public async updateMatchGoals(req: Request, res: Response, next: NextFunction):
-  Promise<void | Response> {
+  public async updateMatchGoals(req: Request, res: Response, next: NextFunction): Promise<void | Response> {
     try {
       const { id } = req.params;
       const { homeTeamGoals, awayTeamGoals } = req.body;
-      const newMatchGoals = await this.service
-        .updateMatchGoalsById(id, homeTeamGoals, awayTeamGoals);
+      const newMatchGoals = await this.service.updateMatchGoalsById(id, homeTeamGoals, awayTeamGoals);
       return res.status(HTTP_STATUS.SuccessOK).json({ message: newMatchGoals });
     } catch (error) {
       next(error);
     }
   }
 
-  public async createNewMatch(req: Request, res: Response, next: NextFunction):
-  Promise<void | Response> {
+  public async createNewMatch(req: Request, res: Response, next: NextFunction): Promise<void | Response> {
     try {
       const { homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals } = req.body as IMatch;
       const payload = { homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals };

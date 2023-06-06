@@ -15,13 +15,11 @@ export default class LeaderboardsController {
     this.matches = matches;
   }
 
-  async homeLeaderboard(req: Request, res: Response, next: NextFunction):
-  Promise<void | Response> {
+  async homeLeaderboard(_req: Request, res: Response, next: NextFunction): Promise<void | Response> {
     try {
       const teams = await this.team.getAllTeams();
       const matches = await this.matches.getAllMatches();
-      const finalizedMatches = matches.filter((match) => match.inProgress === false) as
-        unknown as IMatch[];
+      const finalizedMatches = matches.filter((match) => match.inProgress === false) as unknown as IMatch[];
       const leaderboardStatus = this.service.getAllStatus(teams, finalizedMatches, true);
       const sortLeaderboardStatus = this.service.tiebreaker(leaderboardStatus);
       return res.status(HTTP_STATUS.SuccessOK).json(sortLeaderboardStatus);
@@ -30,12 +28,11 @@ export default class LeaderboardsController {
     }
   }
 
-  async awayLeaderboard(req: Request, res:Response, next: NextFunction) {
+  async awayLeaderboard(req: Request, res: Response, next: NextFunction) {
     try {
       const teams = await this.team.getAllTeams();
       const matches = await this.matches.getAllMatches();
-      const finalizedMatches = matches
-        .filter((match) => match.inProgress === false) as unknown as IMatch[];
+      const finalizedMatches = matches.filter((match) => match.inProgress === false) as unknown as IMatch[];
       const leaderboardStatus = this.service.getAllStatus(teams, finalizedMatches, false);
       const sortLeaderboardStatus = this.service.tiebreaker(leaderboardStatus);
       return res.status(HTTP_STATUS.SuccessOK).json(sortLeaderboardStatus);
@@ -44,12 +41,11 @@ export default class LeaderboardsController {
     }
   }
 
-  async leaderboard(req: Request, res:Response, next: NextFunction) {
+  async leaderboard(req: Request, res: Response, next: NextFunction) {
     try {
       const teams = await this.team.getAllTeams();
       const matches = await this.matches.getAllMatches();
-      const finalizedMatches = matches
-        .filter((match) => match.inProgress === false) as unknown as IMatch[];
+      const finalizedMatches = matches.filter((match) => match.inProgress === false) as unknown as IMatch[];
       const leaderboardStatus = this.service.getLeaderboard(teams, finalizedMatches);
       const sortLeaderboardStatus = this.service.tiebreaker(leaderboardStatus);
       return res.status(HTTP_STATUS.SuccessOK).json(sortLeaderboardStatus);

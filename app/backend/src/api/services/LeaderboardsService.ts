@@ -93,7 +93,7 @@ export default class LeaderboardsService implements ILeaderboardService {
     return times;
   };
 
-  public totalPoints = (id: number, matches: IMatch[]) : number => {
+  public totalPoints = (id: number, matches: IMatch[]): number => {
     let points = 0;
     matches.forEach((match) => {
       if (match.homeTeamId === id) {
@@ -109,23 +109,26 @@ export default class LeaderboardsService implements ILeaderboardService {
   };
 
   public tiebreaker = (leaderboard: ILeaderboard[]): ILeaderboard[] => {
-    const result = leaderboard.sort((a, b) => (
-      b.totalPoints - a.totalPoints
-          || b.totalVictories - a.totalVictories
-          || b.goalsBalance - a.goalsBalance
-          || b.goalsFavor - a.goalsFavor
-          || a.goalsOwn - b.goalsOwn
-    ));
+    const result = leaderboard.sort(
+      (a, b) =>
+        b.totalPoints - a.totalPoints ||
+        b.totalVictories - a.totalVictories ||
+        b.goalsBalance - a.goalsBalance ||
+        b.goalsFavor - a.goalsFavor ||
+        a.goalsOwn - b.goalsOwn
+    );
     return result;
   };
 
   public getAllStatus = (teams: ITeam[], matches: IMatch[], isHome: boolean): ILeaderboard[] => {
     const result = teams.map((team) => {
-      const filteredMatches = isHome ? matches.filter(({ homeTeamId }) => homeTeamId === team.id)
+      const filteredMatches = isHome
+        ? matches.filter(({ homeTeamId }) => homeTeamId === team.id)
         : matches.filter(({ awayTeamId }) => awayTeamId === team.id);
       const totalGames = this.timesPlaying(team.id as number, filteredMatches);
       const totalPoints = this.totalPoints(team.id as number, filteredMatches);
-      return { name: team.teamName,
+      return {
+        name: team.teamName,
         totalPoints,
         totalGames,
         totalVictories: this.winningTimes(team.id as number, filteredMatches),
@@ -144,7 +147,8 @@ export default class LeaderboardsService implements ILeaderboardService {
     const result = teams.map((team) => {
       const totalGames = this.timesPlaying(team.id as number, matches);
       const totalPoints = this.totalPoints(team.id as number, matches);
-      return { name: team.teamName,
+      return {
+        name: team.teamName,
         totalPoints,
         totalGames,
         totalVictories: this.winningTimes(team.id as number, matches),
