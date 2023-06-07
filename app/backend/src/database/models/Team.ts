@@ -7,24 +7,26 @@ class Team extends Model {
   declare teamName: string;
 }
 
-Team.init({
-
-  id: {
-    type: INTEGER,
-    allowNull: false,
-    autoIncrement: true,
-    primaryKey: true,
+Team.init(
+  {
+    id: {
+      type: INTEGER,
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    teamName: {
+      type: STRING,
+      allowNull: false,
+    },
   },
-  teamName: {
-    type: STRING,
-    allowNull: false,
-  },
-}, {
-  underscored: true,
-  sequelize: db,
-  tableName: 'teams',
-  timestamps: false,
-});
+  {
+    underscored: true,
+    sequelize: db,
+    tableName: 'teams',
+    timestamps: false,
+  }
+);
 
 Matche.belongsTo(Team, { foreignKey: 'homeTeamId', as: 'homeTeam' });
 Matche.belongsTo(Team, { foreignKey: 'awayTeamId', as: 'awayTeam' });

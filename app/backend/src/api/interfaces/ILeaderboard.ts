@@ -8,5 +8,4 @@ export default interface ILeaderboard {
   goalsFavor: number;
   goalsOwn: number;
   goalsBalance: number;
-
 }
