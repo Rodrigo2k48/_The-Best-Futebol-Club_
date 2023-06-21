@@ -35,12 +35,9 @@ crie e gerencie partidas e veja as perfomaces do seu time do coração em tempo 
 <br/>
 
 <h2 id="Detalhes">Contexto ✒️</h2>
-Desenvolvi essa aplicação quando eu era aluno da <a style="color:#1EEFAF" href="https://www.betrybe.com/">Trybe</a>,
-uma das melhores escolas de programação online do Brasil
-no módulo deles de back-end.
 
-nesse projeto desenvolvi uma `API Rest` em `Typescript` usando paradigma de `POO` (programação orientada a objetos) com os seus princípios `S.O.L.I.D` trabalhando encima da arquitetura `MSC` (Model Service Controller)
-também usei o método `TDD` (Test Driven Development) no desenvolvimento de boa parte da aplicação, utilizei o `Docker` (docker-compose) para integrar toda a aplicação a funcionar e consumir um banco de dados `MySql` modelado por uma ORM `Sequelize`
+Desenvolvi essa aplicação quando eu era aluno da <a href="https://www.betrybe.com/">Trybe</a>,
+uma das melhores escolas de programação online do Brasil no módulo deles de back-end, nesse projeto desenvolvi uma `API Rest` em `Typescript` usando paradigma de `POO` (programação orientada a objetos) com os seus princípios `S.O.L.I.D` trabalhando encima da arquitetura `MSC` (Model Service Controller) também usei o método `TDD` (Test Driven Development) no desenvolvimento de boa parte da aplicação, utilizei o `Docker` (docker-compose) para integrar toda a aplicação a funcionar e consumir um banco de dados `MySql` modelado por uma ORM `Sequelize`
 
 <div align="center">
 <img src="./assets/diagrama-er%20tbfc.png"/>
@@ -48,7 +45,6 @@ também usei o método `TDD` (Test Driven Development) no desenvolvimento de boa
 
 Essas são as rotas desenvolvidas por mim 
 - rotas que possuem 🔑 precisam de um token válido para serem acessadas mais detalhes em "Como rodar o projeto" no tópico "Hora de rodar!"
-
 - Sim essa Api poderia ter uma documentação, o motivo de não ter eu explico no tópico "Diario de Bordo"
 <div align="center">
 <img src="assets/rotas%20da%20aplica%C3%A7%C3%A3o.png"/>
@@ -242,7 +238,7 @@ senha: secret_admin
 Diário de Bordo 🧭
 </h2>
 
-```
+
 08/06/2023 19:16PM - Ufa, finalmente eu consegui postar o meu primeiro projeto no github… por que dá demora?
 o por que eu queria entregar algo bem feito, um projeto onde eu sei exatamente tudo oque está acontecendo,
 e o meu primeiro projeto foi esse, o TFC trybe futebol clube (que apelidei de TBFC), estou orgulhoso pelos
@@ -253,4 +249,4 @@ o The best Futebol Club vai ganhar uma versão em DDD, sim arquitetura Hexagonal
 com o front-enddesenvolvido por mim, porque? Por que ele merece… foi um projeto muito incrível, e com certeza
 esse daqui servirá muito bem de base para o The_best_futebol_clube_ddd,a partir daqui eu me despeço desse projeto,
 não darei continuidade nesse daqui, e sim na nova versão em ddd que em breve sai.
-```
+
