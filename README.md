@@ -1,34 +1,8 @@
-<style>
-  *{
-     text-decoration: none     
-}
-logo{
-     display: flex;
-     align-items: center;
-     justify-content: center;  
-     background-color: black;
-}
-legenda{
-     font-size:18px
-}
-a{
-  font-size: 20px
-}
-gif {
-     display: flex;
-     align-items: center;
-     justify-content: center;
-}
-mysql {
-  display: flex;
-  flex-direction: row;
-}
-</style>
 # Sejam Bem vindos ao <strong>The Best Futebol Clube<strong> ⚽⭐
 
-<logo>
-<img src="../_Trybe-Futebol-Club_/assets/negative_logo.png" alt="logo do projeto" height=200px >
-</logo>
+<div align="center" background-color="black">
+<img src="./assets/negative_logo.png" alt="logo do projeto" height=200px aling=center>
+</div>
 <legenda>
 <p>
 The Best Futebol Club é um simulador do campeonato de futebol mais famoso do Brasil, o Brasileirão! 
@@ -45,9 +19,9 @@ crie e gerencie partidas e veja as perfomaces do seu time do coração em tempo 
 * Link da aplicação <a>aqui</a> (EM MANUTENÇÃO⚠️)
 </p>
 <legenda/>
-<gif>
+<div align="center">
 <img src="./assets/gif%20da%20aplica%C3%A7%C3%A3o%20em%20funcionamento.gif">
-</gif>
+</div>
 <br/>
 
 ## Indice 📌
@@ -66,19 +40,19 @@ uma das melhores escolas de programação online do Brasil
 no módulo deles de back-end.
 
 nesse projeto desenvolvi uma `API Rest` em `Typescript` usando paradigma de `POO` (programação orientada a objetos) com os seus princípios `S.O.L.I.D` trabalhando encima da arquitetura `MSC` (Model Service Controller)
-também usei o método `TDD` (Test Driven Development) no desenvolvimento de boa parte da aplicação, utilizei o `Docker` (docker-compose) para integrar toda a aplicação a funcionar e consumir um banco de dados `MySql` modelado por uma ORM `Sequelize`  
-<gif>
-<img src="./assets/diagrama-er%20tbfc.png"/>
-</gif>
+também usei o método `TDD` (Test Driven Development) no desenvolvimento de boa parte da aplicação, utilizei o `Docker` (docker-compose) para integrar toda a aplicação a funcionar e consumir um banco de dados `MySql` modelado por uma ORM `Sequelize`
 
+<div align="center">
+<img src="./assets/diagrama-er%20tbfc.png"/>
+</div>
 
 Essas são as rotas desenvolvidas por mim 
 - rotas que possuem 🔑 precisam de um token válido para serem acessadas mais detalhes em "Como rodar o projeto" no tópico "Hora de rodar!"
 
 - Sim essa Api poderia ter uma documentação, o motivo de não ter eu explico no tópico "Diario de Bordo"
-<gif>
+<div align="center">
 <img src="assets/rotas%20da%20aplica%C3%A7%C3%A3o.png"/>
-</gif>
+</div>
 
 Todo o projeto foi orquestrado atravéz de um README fornecido pela trybe, com suas devidas regras de negócios que deveriam ser implementadas nessa aplicação, um exemplo delas é um sistema de hierarquia onde para saber se um usuário é admin ou outra patente mais baixa, será necessário ser informado isso atráves de um token válido, que a própria aplicação cria, sempre que um login no sistema é bem sucedido, a aplicação pega as informações do usuário no banco de dados, e realiza a criação desse token `JWT`, a aplicação analisa esse token e dependendo da sua patente na aplicação, podera realizar alterações exclusivas de cada patente (Exemplo um usuário comum não pode alterar o placar de uma partida...só o administrador -Admin-)
 por mais que essa aplicação seja fullstack, eu realizei apenas a implementação do back-end desse projeto, todo o front-end (tirando poucas coisas de estilização) a Trybe me forneceu já pronto.
@@ -266,8 +240,17 @@ senha: secret_admin
 
 <h2 id="Diario">
 Diário de Bordo 🧭
-</h2> 
+</h2>
 
-```bash
-08/06/2023 19:16PM - Ufa, finalmente eu consegui postar o meu primeiro projeto no github… por que dá demora? o por que eu queria entregar algo bem feito, um projeto onde eu sei exatamente tudo oque está acontecendo, e o meu primeiro projeto foi esse, o TFC trybe futebol clube (que apelidei de TBFC), estou orgulhoso pelos meus feitos nesse projeto, é um bom projeto na minha opinião, mas ele não é perfeito, e isso é fantástico! Mesmo ele tendo 100% de coverage nos testes e totalmente funcional, Enfim, consegui! Estou feliz, vou jogar video game e tirar o dia de folga pra comemorar meu feito, e me preparar, porque esse não é o projeto final, o The best Futebol Club vai ganhar uma versão em DDD, sim arquitetura Hexagonal ao em vez da MSC, e dessa vez com o front-end desenvolvido por mim, porque? Por que ele merece… foi um projeto muito incrível, e com certeza esse daqui servirá muito bem de base para o The_best_futebol_clube_ddd, a partir daqui eu me despeço desse projeto, não darei continuidade nesse daqui, e sim na nova versão em ddd que em breve sai.
+```
+08/06/2023 19:16PM - Ufa, finalmente eu consegui postar o meu primeiro projeto no github… por que dá demora?
+o por que eu queria entregar algo bem feito, um projeto onde eu sei exatamente tudo oque está acontecendo,
+e o meu primeiro projeto foi esse, o TFC trybe futebol clube (que apelidei de TBFC), estou orgulhoso pelos
+meus feitos nesse projeto, é um bom projeto na minha opinião, mas ele não é perfeito, e isso é fantástico!
+Mesmo ele tendo 100% de coveragenos testes e totalmente funcional, Enfim, consegui! Estou feliz, vou jogar
+video game e tirar o dia de folga pra comemorar meu feito, e me preparar, porque esse não é o projeto final,
+o The best Futebol Club vai ganhar uma versão em DDD, sim arquitetura Hexagonal ao em vez da MSC, e dessa vez
+com o front-enddesenvolvido por mim, porque? Por que ele merece… foi um projeto muito incrível, e com certeza
+esse daqui servirá muito bem de base para o The_best_futebol_clube_ddd,a partir daqui eu me despeço desse projeto,
+não darei continuidade nesse daqui, e sim na nova versão em ddd que em breve sai.
 ```
